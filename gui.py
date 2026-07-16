@@ -3,18 +3,27 @@ import sign_up
 import log_in
 
 # GUI
-def proto_GUI_signup(accounts):
-    layout = [[sg.Text("Sign Up")],
-              [sg.Text("enter username:")],
-              [sg.Input(key="USERNAME")],
-              [sg.Text("enter email address:")],
-              [sg.Input(key="EMAIL")],
-              [sg.Text("enter password:")],
-              [sg.Input(key="PASSWORD")],
-              [sg.Text(size=(40, 1), key="OUTPUT")],
-              [sg.Text("Already have an account?"), sg.Button("log in")],
-              [sg.Button("ok"), sg.Button("quit")]]
-    window = sg.Window("PROTO sign up", layout, resizable=True)
+
+sg.user_settings_filename(filename='my_settings.json')
+print(sg.user_settings_filename())
+settings = sg.UserSettings()
+settings.load()
+print(settings)
+
+def GUI_signup(accounts):
+    layout = [[sg.VPush(background_color="#969696")],
+              [sg.Text("Sign Up", font= ("Default font", 30), background_color="#969696")],
+              [sg.Text("enter username:", background_color="#969696")],
+              [sg.Input(key="USERNAME", background_color="#ffffff")],
+              [sg.Text("enter email address:", background_color="#969696")],
+              [sg.Input(key="EMAIL", background_color="#ffffff")],
+              [sg.Text("enter password:", background_color="#969696")],
+              [sg.Input(key="PASSWORD", background_color="#ffffff")],
+              [sg.Text(size=(40, 1), key="OUTPUT", background_color="#969696")],
+              [sg.Text("Already have an account?", background_color="#969696"), sg.Button("log in")],
+              [sg.Button("ok"), sg.Button("quit")],
+              [sg.VPush(background_color="#969696")]]
+    window = sg.Window("sign up", layout, element_justification='center', resizable=True, background_color="#969696")
     while True:
         event, values = window.read()
         if event == sg.WINDOW_CLOSED or event == 'quit':
@@ -24,22 +33,22 @@ def proto_GUI_signup(accounts):
             window["OUTPUT"].update(result)
         if event == "log in":
             window.close()
-            print(proto_GUI_login(accounts))
+            print(GUI_login(accounts))
 
 
-def proto_GUI_login(accounts):
+def GUI_login(accounts):
     layout = [[sg.VPush()],
-              [sg.Text("Log In")],
+              [sg.Text("Log In", font= ("Helvetica", 30))],
               [sg.Text("enter username:")],
               [sg.Input(key="USERNAME")],
               [sg.Text("enter password:")],
               [sg.Input(key="PASSWORD")],
-              [sg.Button("forgot password")],
+              [sg.Push(), sg.pin(sg.Button("forgot password")), sg.Push()],
               [sg.Text(size=(40, 1), key="OUTPUT")],
               [sg.Text("Don't have an account?"), sg.Button("sign up")],
               [sg.Button("ok"), sg.Button("quit")],
               [sg.VPush()]]
-    window = sg.Window("PROTO log in", layout, element_justification='center',resizable=True)
+    window = sg.Window("log in", layout, element_justification='center', resizable=True)
     while True:
         event, values = window.read()
         if event == sg.WINDOW_CLOSED or event == 'quit':
@@ -49,4 +58,4 @@ def proto_GUI_login(accounts):
             window["OUTPUT"].update(result)
         if event == "sign up":
             window.close()
-            print(proto_GUI_signup(accounts))
+            print(GUI_signup(accounts))

@@ -17,4 +17,4 @@ accounts = {
 }
 
 
-print(gui.proto_GUI_signup(accounts))
+print(gui.GUI_signup(accounts))
