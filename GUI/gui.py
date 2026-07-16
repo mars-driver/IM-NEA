@@ -14,11 +14,19 @@ print(settings)
 """
 
 def GUI_signup_login(accounts):
-    layout = [[sg.VPush()],
-              [sg.TabGroup([[sg.Tab(title="", layout=layouts.signup_layout, k="-SIGNUP-"), sg.Tab("", layouts.login_layout, visible=False, k="-LOGIN-")]])],
-              [sg.VPush()]]
+    layout = [
+        [sg.Text("")],
+        [sg.Text("APP NAME", font=("Default font", 40))],
+        [sg.Text("")],
+        [sg.Push(),
+        sg.TabGroup([[
+            sg.Tab("", layouts.customise_profile_layout, visible=True, k="-CUSTOMISE-"),
+            sg.Tab("", layouts.signup_layout, visible = False, k="-SIGNUP-"),
+            sg.Tab("", layouts.login_layout, visible=False, k="-LOGIN-")
+        ]]), sg.Push()],
+    ]
 
-    window = sg.Window("sign up / log in", layout, resizable=True, element_justification="center")
+    window = sg.Window("sign up / log in", layout, resizable=True)
 
     while True:
         event, values = window.read()
@@ -28,6 +36,9 @@ def GUI_signup_login(accounts):
             relevant_values = [values["SIGNUP-USERNAME"], values["SIGNUP-EMAIL"], values["SIGNUP-PASSWORD"]]
             result = sign_up.proto_sign_up(relevant_values, accounts)
             window["SIGNUP-OUTPUT"].update(result)
+            if result == "Sign up successful.":
+                window["-CUSTOMISE-"].update(visible=True)
+                window["-SIGNUP-"].update(visible=False)
         if event == "log in":
             relevant_values = [values["LOGIN-USERNAME"], values["LOGIN-PASSWORD"]]
             result = log_in.proto_log_in(relevant_values, accounts)

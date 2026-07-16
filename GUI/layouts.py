@@ -2,27 +2,63 @@ import PySimpleGUI as sg # library for GUI
 
 sg.theme("SystemDefault1") # sets theme
 
-signup_layout = [[sg.Push(), sg.Text("Sign Up", font= ("Default font", 30)), sg.Push()],
-                 [sg.Text("enter username:")],
-                 [sg.Input(key="SIGNUP-USERNAME")],
-                 [sg.Text("enter email address:")],
-                 [sg.Input(key="SIGNUP-EMAIL")],
-                 [sg.Text("enter password:")],
-                 [sg.Input(key="SIGNUP-PASSWORD")],
-                 [sg.Text(size=(40, 1), key="SIGNUP-OUTPUT")],
-                 [sg.Text("Already have an account?"), sg.Button("log in here")],
-                 [sg.Text("")],
-                 [sg.Push(), sg.Button("sign up", font= ("Default font", 15)), sg.Push()],
-                 [sg.Text("")]]
+# constants
+title_size = 30
+input_output_size = 30
+padding = ((64,0),0)
 
-login_layout = [[sg.Push(), sg.Text("Log In", font= ("Default font", 30)), sg.Push()],
-                [sg.Text("")],
-                [sg.Text("enter username:")],
-                [sg.Input(key="LOGIN-USERNAME")],
-                [sg.Text("enter password:")],
-                [sg.Input(key="LOGIN-PASSWORD")],
-                [sg.pin(sg.Button("forgot password")), sg.Push()],
-                [sg.Text(size=(40, 1), key="LOGIN-OUTPUT")],
-                [sg.Text("Don't have an account?"), sg.Button("sign up here")],
-                [sg.Text("")],
-                [sg.Push(), sg.Button("log in", font= ("Default font", 15)), sg.Push()]]
+signup_layout = [
+    [sg.Push(), sg.Text("Already have an account?")],
+    [sg.Push(), sg.Button("log in here", size=18)],
+    [sg.Text("")],
+    [sg.Push(), sg.Text("Sign Up", font= ("Default font", title_size)), sg.Push()],
+    [sg.Text("")],
+    [sg.Text("enter username:"), sg.Text("enter password:", pad=((121,0),0))],
+    [sg.Input(key="SIGNUP-USERNAME", size=input_output_size), sg.Input(key="SIGNUP-PASSWORD", size=input_output_size)],
+    [sg.Text("enter email address:"), sg.Text("confirm password:", pad=((98,0),0))],
+    [sg.Input(key="SIGNUP-EMAIL", size=input_output_size), sg.Input(key="SIGNUP-CONFIRMPASSWORD", size=input_output_size)],
+    [sg.Text(size=input_output_size, key="SIGNUP-OUTPUT")],
+    [sg.Text("")],
+    [sg.Push(), sg.Button("sign up", font= ("Default font", 20)), sg.Push()],
+    [sg.Text("")]
+]
+
+customise_profile_layout = [
+[sg.Push(), sg.Text("Already have an account?")],
+    [sg.Push(), sg.Button("log in here", size=18)],
+    [sg.Text("")],
+    [sg.Push(), sg.Text("Customise Profile", font= ("Default font", title_size)), sg.Push()],
+    [sg.Column([
+        [sg.Text("image"), sg.Text(size=input_output_size, key="CUSTOMISE-USERNAME")],
+        [sg.Text("Bio:")],
+        [sg.Text(key="CUSTOMISE-SHOWBIO", size=(100,100))]
+    ]), sg.Column([
+        [sg.Text("Upload profile picture")],
+        [sg.Input("choose file", key="CUSTOMISE-PFP")],
+        [sg.Text("Write bio")],
+        [sg.Input(key="CUSTOMISE-BIO", size=(100,100))]
+    ])],
+    [sg.Button("Confirm", font= ("Default font", title_size))]
+]
+
+login_layout = [
+    [sg.Push(), sg.Text("Don't have an account?")],
+[sg.Push(), sg.Button("sign up here", size=16)],
+    [sg.Push(), sg.Text("Log In", font= ("Default font", title_size)), sg.Push()],
+    [sg.Text("")],
+    [sg.Text("enter username:", pad=padding)],
+    [sg.Push(), sg.Input(key="LOGIN-USERNAME"), sg.Push()],
+    [sg.Text("")],
+    [sg.Text("enter password:", pad=padding)],
+    [sg.Push(), sg.Input(key="LOGIN-PASSWORD"), sg.Push()],
+    [sg.Button("forgot password", pad=padding)],
+    [sg.Text(size=input_output_size, key="LOGIN-OUTPUT")],
+    [sg.Push(), sg.Button("log in", font= ("Default font", 20)), sg.Push()],
+    [sg.Text("")]
+]
+
+
+
+account_recovery_layout = [
+    [sg.Push(), sg.Text("Account Recovery", font= ("Default font", 30)), sg.Push()],
+]
