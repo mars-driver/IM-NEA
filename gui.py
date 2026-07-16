@@ -4,11 +4,13 @@ import log_in
 
 # GUI
 
+"""
 sg.user_settings_filename(filename='my_settings.json')
 print(sg.user_settings_filename())
 settings = sg.UserSettings()
 settings.load()
 print(settings)
+"""
 
 def GUI_signup(accounts):
     layout = [[sg.VPush(background_color="#969696")],
@@ -61,8 +63,7 @@ def GUI_login(accounts):
             print(GUI_signup(accounts))
 
 def GUI_signup_login(accounts):
-    signup_layout = [[sg.VPush(background_color="#969696")],
-                    [sg.Text("Sign Up", font= ("Default font", 30), background_color="#969696")],
+    signup_layout = [[sg.Text("Sign Up", font= ("Default font", 30), background_color="#969696")],
                     [sg.Text("enter username:", background_color="#969696")],
                     [sg.Input(key="SIGNUP-USERNAME", background_color="#ffffff")],
                     [sg.Text("enter email address:", background_color="#969696")],
@@ -71,11 +72,9 @@ def GUI_signup_login(accounts):
                     [sg.Input(key="SIGNUP-PASSWORD", background_color="#ffffff")],
                     [sg.Text(size=(40, 1), key="SIGNUP-OUTPUT", background_color="#969696")],
                     [sg.Text("Already have an account?", background_color="#969696"), sg.Button("log in here")],
-                    [sg.Button("sign up"), sg.Button("quit")],
-                    [sg.VPush(background_color="#969696")]]
+                    [sg.Button("sign up"), sg.Button("quit")]]
 
-    login_layout = [[sg.VPush()],
-                    [sg.Text("Log In", font= ("Helvetica", 30))],
+    login_layout = [[sg.Text("Log In", font= ("Default font", 30))],
                     [sg.Text("enter username:")],
                     [sg.Input(key="LOGIN-USERNAME")],
                     [sg.Text("enter password:")],
@@ -83,20 +82,23 @@ def GUI_signup_login(accounts):
                     [sg.Push(), sg.pin(sg.Button("forgot password")), sg.Push()],
                     [sg.Text(size=(40, 1), key="LOGIN-OUTPUT")],
                     [sg.Text("Don't have an account?"), sg.Button("sign up here")],
-                    [sg.Button("log in"), sg.Button("quit")],
-                    [sg.VPush()]]
+                    [sg.Button("log in"), sg.Button("quit")]]
 
-    layout = [[sg.TabGroup([[sg.Tab(title="", layout=signup_layout, k="-SIGNUP-"), sg.Tab("", login_layout, visible=False, k="-LOGIN-")]])]]
-    window = sg.Window("sign up / log in", layout, resizable=True, element_justification="center")
+    layout = [[sg.VPush(background_color="#969696")],
+              [sg.TabGroup([[sg.Tab(title="", layout=signup_layout, k="-SIGNUP-"), sg.Tab("", login_layout, visible=False, k="-LOGIN-")]], background_color="#969696", tab_background_color="#969696", selected_background_color="#969696")],
+              [sg.VPush(background_color="#969696")]]
+    window = sg.Window("sign up / log in", layout, background_color="#969696", resizable=True, element_justification="center")
     while True:
         event, values = window.read()
         if event == sg.WINDOW_CLOSED or event == 'quit':
             break
         if event == "sign up":
-            result = sign_up.proto_sign_up(values.values(), accounts)
+            relevant_values = [values["SIGNUP-USERNAME"], values["SIGNUP-EMAIL"], values["SIGNUP-PASSWORD"]]
+            result = sign_up.proto_sign_up(relevant_values, accounts)
             window["SIGNUP-OUTPUT"].update(result)
         if event == "log in":
-            result = log_in.proto_log_in(values.values(), accounts)
+            relevant_values = [values["LOGIN-USERNAME"], values["LOGIN-PASSWORD"]]
+            result = log_in.proto_log_in(relevant_values, accounts)
             window["LOGIN-OUTPUT"].update(result)
         if event == "sign up here":
             window["-SIGNUP-"].update(visible=True)
