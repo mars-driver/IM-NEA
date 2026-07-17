@@ -30,10 +30,10 @@ def GUI_signup_login(accounts):
 
     while True:
         event, values = window.read()
-        if event == sg.WINDOW_CLOSED or event == 'quit':
+        if event == sg.WINDOW_CLOSED:
             break
         if event == "sign up":
-            relevant_values = [values["SIGNUP-USERNAME"], values["SIGNUP-EMAIL"], values["SIGNUP-PASSWORD"]]
+            relevant_values = [values["SIGNUP-USERNAME"], values["SIGNUP-EMAIL"], values["SIGNUP-PASSWORD"], values["SIGNUP-CONFIRMPASSWORD"]]
             result = sign_up.proto_sign_up(relevant_values, accounts)
             window["SIGNUP-OUTPUT"].update(result)
             if result == "Sign up successful.":

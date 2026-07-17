@@ -21,11 +21,13 @@ def proto_valid_password(newPassword):
     return False
 
 def proto_sign_up(values, accounts):
-    username, email, password = values
+    username, email, password, password_again = values
     while proto_valid_new_username(username, accounts) == False:
          return "Username invalid."
     while proto_valid_email(email) == False:
         return "Email address invalid."
     while proto_valid_password(password) == False:
         return "Password invalid."
+    while password != password_again:
+        return "Passwords do not match."
     return "Sign up successful."
