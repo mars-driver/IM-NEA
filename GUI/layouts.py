@@ -37,9 +37,9 @@ customise_profile_layout = [
         [sg.Text("Upload profile picture")],
         [sg.FileBrowse(button_text="choose file", key="CUSTOMISE-PFP")],
         [sg.Text("Write bio")],
-        [sg.Input(default_text="Start typing...",key="CUSTOMISE-BIO", size=(25, 50), background_color="#ffffff")]
+        [sg.Multiline(default_text="Start typing...",key="CUSTOMISE-BIO", size=(25, 10), background_color="#ffffff")]
     ], size=(200,200)), sg.Push()],
-    [sg.Push(), sg.Button("Confirm", font= ("Default font", title_size)), sg.Push()]
+    [sg.Push(), sg.Button("Confirm", font= ("Default font", 20)), sg.Push()]
 ]
 
 login_layout = [
