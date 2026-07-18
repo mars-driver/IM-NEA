@@ -13,11 +13,17 @@ signup_layout = [
     [sg.Text("")],
     [sg.Push(), sg.Text("Sign Up", font= ("Default font", title_size)), sg.Push()],
     [sg.Text("")],
-    [sg.Text("enter username:"), sg.Text("enter password:", pad=((121,0),0))],
-    [sg.Input(key="SIGNUP-USERNAME", size=input_output_size), sg.Input(key="SIGNUP-PASSWORD", size=input_output_size, password_char="*")],
-    [sg.Text("enter email address:"), sg.Text("confirm password:", pad=((98,0),0))],
-    [sg.Input(key="SIGNUP-EMAIL", size=input_output_size), sg.Input(key="SIGNUP-CONFIRMPASSWORD", size=input_output_size, password_char="*")],
-    [sg.Text(size=input_output_size, key="SIGNUP-OUTPUT")],
+    [sg.Push(), sg.Column([
+        [sg.Text("enter username:")],
+        [sg.Input(key="SIGNUP-USERNAME", size=input_output_size)],
+        [sg.Text("enter email address:")],
+        [sg.Input(key="SIGNUP-EMAIL", size=input_output_size)]
+    ]), sg. Column([
+        [sg.Text("enter password:")],
+        [sg.Input(key="SIGNUP-PASSWORD", size=input_output_size, password_char="*")],
+        [sg.Text("confirm password:")],
+        [sg.Input(key="SIGNUP-CONFIRMPASSWORD", size=input_output_size, password_char="*")]
+    ]), sg.Push()],
     [sg.Text("")],
     [sg.Push(), sg.Button("sign up", font= ("Default font", 20)), sg.Push()],
     [sg.Text("")]
