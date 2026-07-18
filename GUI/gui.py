@@ -36,9 +36,7 @@ def GUI_signup_login(accounts):
     current_page = pages["-SIGNUP-"]
 
     while True:
-        print("current page:", current_page)
         event, values = window.read()
-        print("event:", event)
         if event == sg.WINDOW_CLOSED:
             break
         current_page = current_page.run_events(window, event, values, pages, accounts)
