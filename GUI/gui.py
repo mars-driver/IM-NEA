@@ -20,9 +20,9 @@ def GUI_signup_login(accounts):
         [sg.Text("")],
         [sg.Push(),
         sg.TabGroup([[
+            sg.Tab("", layouts.signup_layout, visible=True, k="-SIGNUP-"),
             sg.Tab("", layouts.customise_profile_layout, visible=True, k="-CUSTOMISE-"),
-            sg.Tab("", layouts.signup_layout, visible = False, k="-SIGNUP-"),
-            sg.Tab("", layouts.login_layout, visible=False, k="-LOGIN-")
+            sg.Tab("", layouts.login_layout, visible=True, k="-LOGIN-")
         ]]), sg.Push()],
     ]
 

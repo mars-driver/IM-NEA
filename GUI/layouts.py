@@ -28,17 +28,18 @@ customise_profile_layout = [
     [sg.Push(), sg.Button("log in here", size=18)],
     [sg.Text("")],
     [sg.Push(), sg.Text("Customise Profile", font= ("Default font", title_size)), sg.Push()],
-    [sg.Column([
+    [sg.Push(), sg.Frame("", [
+        [sg.Text("Profile Preview:")],
         [sg.Text("image"), sg.Text(size=input_output_size, key="CUSTOMISE-USERNAME")],
         [sg.Text("Bio:")],
-        [sg.Text(key="CUSTOMISE-SHOWBIO", size=(100,100))]
-    ]), sg.Column([
+        [sg.Text(key="CUSTOMISE-SHOWBIO", size=(25,10), background_color="#ffffff")]
+    ], size=(200,200)), sg.Frame("", [
         [sg.Text("Upload profile picture")],
-        [sg.Input("choose file", key="CUSTOMISE-PFP")],
+        [sg.FileBrowse(button_text="choose file", key="CUSTOMISE-PFP")],
         [sg.Text("Write bio")],
-        [sg.Input(key="CUSTOMISE-BIO", size=(100,100))]
-    ])],
-    [sg.Button("Confirm", font= ("Default font", title_size))]
+        [sg.Input(default_text="Start typing...",key="CUSTOMISE-BIO", size=(25, 50), background_color="#ffffff")]
+    ], size=(200,200)), sg.Push()],
+    [sg.Push(), sg.Button("Confirm", font= ("Default font", title_size)), sg.Push()]
 ]
 
 login_layout = [
