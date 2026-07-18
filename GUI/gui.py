@@ -2,6 +2,7 @@ import PySimpleGUI as sg # library for GUI
 import sign_up
 import log_in
 from GUI import layouts
+from GUI import page_classes
 
 # GUI
 
@@ -27,33 +28,20 @@ def GUI_signup_login(accounts):
     ]
 
     window = sg.Window("sign up / log in", layout, resizable=True)
-    pages = ["-SIGNUP-", "-CUSTOMISE-", "-LOGIN-"]
-    current_page = "SIGNUP"
+    pages = {
+        "-SIGNUP-":page_classes.SignUp("-SIGNUP-"),
+        "-CUSTOMISE-":page_classes.Customise("-CUSTOMISE-"),
+        "-LOGIN-":page_classes.LogIn("-LOGIN-")
+    }
+    current_page = pages["-SIGNUP-"]
 
     while True:
+        print("current page:", current_page)
         event, values = window.read()
+        print("event:", event)
         if event == sg.WINDOW_CLOSED:
             break
-        if event == "sign up":
-            relevant_values = [values["SIGNUP-USERNAME"], values["SIGNUP-EMAIL"], values["SIGNUP-PASSWORD"], values["SIGNUP-CONFIRMPASSWORD"]]
-            result = sign_up.proto_sign_up(relevant_values, accounts)
-            window["SIGNUP-OUTPUT"].update(result)
-            if result == "Sign up successful.":
-                change_page(window, pages, "-CUSTOMISE-")
-        if event == "log in":
-            relevant_values = [values["LOGIN-USERNAME"], values["LOGIN-PASSWORD"]]
-            result = log_in.proto_log_in(relevant_values, accounts)
-            window["LOGIN-OUTPUT"].update(result)
-        if event == "sign up here":
-            change_page(window, pages, "-SIGNUP-")
-        if event == "log in here":
-            change_page(window, pages, "-LOGIN-")
+        current_page = current_page.run_events(window, event, values, pages, accounts)
 
-
-def change_page(window, pages, new_page):
-    window[new_page].update(visible=True)
-    for page in pages:
-        if page != new_page:
-            window[page].update(visible=False)
 
 # sg.theme("SystemDefault1")
