@@ -30,15 +30,20 @@ customise_profile_layout = [
     [sg.Push(), sg.Text("Customise Profile", font= ("Default font", title_size)), sg.Push()],
     [sg.Push(), sg.Frame("", [
         [sg.Text("Profile Preview:")],
-        [sg.Text("image"), sg.Text(size=input_output_size, key="CUSTOMISE-USERNAME")],
-        [sg.Text("Bio:")],
-        [sg.Text(key="CUSTOMISE-SHOWBIO", size=(25,10), background_color="#ffffff")]
-    ], size=(200,200)), sg.Frame("", [
+        [sg.Frame("", [
+            [sg.Image("media\\no_pfp.png", subsample=5), sg.Column([
+                [sg.Text("example_username", size=input_output_size, key="CUSTOMISE-USERNAME")],
+                [sg.Text("• Online", size=input_output_size)]
+            ])],
+            [sg.Text("Bio:")],
+            [sg.Text(key="CUSTOMISE-SHOWBIO", size=(30,6), background_color="#ffffff")]
+        ])]], size=(250,250), border_width=0), sg.Frame("", [
         [sg.Text("Upload profile picture")],
-        [sg.FileBrowse(button_text="choose file", key="CUSTOMISE-PFP")],
+        [sg.FileBrowse(button_text="choose file", size=(27,1), key="CUSTOMISE-PFP")],
         [sg.Text("Write bio")],
-        [sg.Multiline(default_text="Start typing...",key="CUSTOMISE-BIO", size=(25, 10), background_color="#ffffff")]
-    ], size=(200,200)), sg.Push()],
+        [sg.Multiline(default_text="Start typing...",key="CUSTOMISE-BIO", size=(30, 7), background_color="#ffffff")],
+        [sg.Button("save")]
+    ], size=(250,250), border_width=0), sg.Push()],
     [sg.Push(), sg.Button("Confirm", font= ("Default font", 20)), sg.Push()]
 ]
 

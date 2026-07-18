@@ -1,5 +1,5 @@
-import sign_up
-import log_in
+from modules import log_in, sign_up
+
 
 class Page:
     def __init__(self, new_name):
@@ -11,7 +11,6 @@ class Page:
 
     def run_events(self, window, event, values, pages, accounts):
         pass
-
 
 class SignUp(Page):
     def run_events(self, window, event, values, pages, accounts):
@@ -27,6 +26,18 @@ class SignUp(Page):
             return pages["-LOGIN-"]
         return self
 
+class Customise(Page):
+    def run_events(self, window, event, values, pages, accounts):
+        if event == "save":
+            window["CUSTOMISE-SHOWBIO"].update(values["CUSTOMISE-BIO"])
+        if event == "Confirm":
+            change_page(window, self, pages["-SIGNUP-"])
+            return pages["-SIGNUP-"]
+        if event == "log in here0":
+            change_page(window, self, pages["-LOGIN-"])
+            return pages["-LOGIN-"]
+        return pages["-CUSTOMISE-"]
+
 class LogIn(Page):
     def run_events(self, window, event, values, pages, accounts):
         if event == "log in":
@@ -38,15 +49,6 @@ class LogIn(Page):
             return pages["-SIGNUP-"]
         return self
 
-class Customise(Page):
-    def run_events(self, window, event, values, pages, accounts):
-        if event == "Confirm":
-            change_page(window, self, pages["-SIGNUP-"])
-            return pages["-SIGNUP-"]
-        if event == "log in here0":
-            change_page(window, self, pages["-LOGIN-"])
-            return pages["-LOGIN-"]
-        return pages["-CUSTOMISE-"]
 
 def change_page(window, current_page, new_page):
     window[new_page.name].update(visible=True)

@@ -1,8 +1,5 @@
 import PySimpleGUI as sg # library for GUI
-import sign_up
-import log_in
-from GUI import layouts
-from GUI import page_classes
+from GUI import layouts, page_classes
 
 # GUI
 
@@ -22,7 +19,7 @@ def GUI_signup_login(accounts):
         [sg.Push(),
         sg.TabGroup([[
             sg.Tab("", layouts.signup_layout, visible=True, k="-SIGNUP-"),
-            sg.Tab("", layouts.customise_profile_layout, visible=False, k="-CUSTOMISE-"),
+            sg.Tab("", layouts.customise_profile_layout, visible=True, k="-CUSTOMISE-"),
             sg.Tab("", layouts.login_layout, visible=False, k="-LOGIN-")
         ]]), sg.Push()],
     ]
