@@ -24,6 +24,7 @@ signup_layout = [
         [sg.Text("confirm password:")],
         [sg.Input(key="SIGNUP-CONFIRMPASSWORD", size=input_output_size, password_char="*")]
     ]), sg.Push()],
+    [sg.Text(size=input_output_size, key="SIGNUP-OUTPUT")],
     [sg.Text("")],
     [sg.Push(), sg.Button("sign up", font= ("Default font", 20)), sg.Push()],
     [sg.Text("")]
