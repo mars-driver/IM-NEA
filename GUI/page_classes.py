@@ -31,8 +31,8 @@ class Customise(Page):
         if event == "save":
             window["CUSTOMISE-SHOWBIO"].update(values["CUSTOMISE-BIO"])
         if event == "Confirm":
-            change_page(window, self, pages["-SIGNUP-"])
-            return pages["-SIGNUP-"]
+            change_page(window, self, pages["-HOME-"])
+            return pages["-HOME-"]
         if event == "log in here0":
             change_page(window, self, pages["-LOGIN-"])
             return pages["-LOGIN-"]
@@ -44,10 +44,20 @@ class LogIn(Page):
             relevant_values = [values["LOGIN-USERNAME"], values["LOGIN-PASSWORD"]]
             result = log_in.proto_log_in(relevant_values, accounts)
             window["LOGIN-OUTPUT"].update(result)
+            if result == "Login successful.":
+                change_page(window, self, pages["-HOME-"])
         if event == "sign up here":
             change_page(window, self, pages["-SIGNUP-"])
             return pages["-SIGNUP-"]
         return self
+
+class Home(Page):
+    def run_events(self, window, event, values, pages, accounts):
+        pass
+
+class Messaging(Page):
+    def run_events(self, window, event, values, pages, accounts):
+        pass
 
 
 def change_page(window, current_page, new_page):
