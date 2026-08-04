@@ -7,12 +7,12 @@ title_size = 30
 subtitle_size = 20
 input_output_size = 30
 padding = ((64,0),0)
-
-def set_theme():
-    background_colour = "grey94"
-    return background_colour
+background_colour = "grey94"
 
 # LAYOUTS
+
+
+# SIGNUP
 
 signup_layout = [
     [sg.Push(), sg.Text("Already have an account?")],
@@ -36,6 +36,10 @@ signup_layout = [
     [sg.Push(), sg.Button("sign up", font= ("Default font", subtitle_size), bind_return_key=True), sg.Push()],
     [sg.Text("")]
 ]
+
+
+
+# CUSTOMISE
 
 customise_profile_layout = [
 [sg.Push(), sg.Text("Already have an account?")],
@@ -61,6 +65,10 @@ customise_profile_layout = [
     [sg.Push(), sg.Button("Confirm", font= ("Default font", subtitle_size), bind_return_key=True), sg.Push()]
 ]
 
+
+
+# LOGIN
+
 login_layout = [
     [sg.Push(), sg.Text("Don't have an account?")],
 [sg.Push(), sg.Button("sign up here", size=16)],
@@ -79,13 +87,15 @@ login_layout = [
 
 
 
+# RECOVERY
+
 account_recovery_layout = [
     [sg.Push(), sg.Text("Account Recovery", font= ("Default font", title_size)), sg.Push()],
 ]
 
 
 
-# HOMEPAGE LAYOUT todo
+# HOME todo
 
 # test data!
 friends = [
@@ -149,6 +159,9 @@ home_layout = [
     [sg.VPush()],
 ]
 
+
+# MESSAGING
+
 messagingroom_layout = [[sg.VPush()],
               [sg.Text("THIS IS THE CLIENT")],
               #[sg.Text("Server address:"), sg.Text(server_ip)],
@@ -163,3 +176,27 @@ messagingroom_layout = [[sg.VPush()],
                   sg.Button("send", bind_return_key=True), sg.Push()
               ],
               [sg.VPush()]]
+
+page_layouts = (signup_layout, customise_profile_layout, login_layout, home_layout, messagingroom_layout)
+
+
+
+# MAIN LAYOUT
+
+page_names = ("-SIGNUP-", "-CUSTOMISE-", "-LOGIN-", "-HOME-", "-MESSAGING-")
+assert len(page_names) == len(page_layouts) # so they don't get out of sync
+page_tabs = [[sg.Tab("", page_layouts[i], visible=False, k=page_names[i]) for i in range(len(page_names))]]
+
+main_layout = [
+    [sg.Text("")],
+    [sg.Text("APP NAME", font=("Default font", 40))],
+    [sg.Text("")],
+    [sg.Push(),
+    sg.TabGroup(
+        page_tabs,
+        selected_background_color = background_colour,
+        background_color = background_colour,
+        border_width=0,
+        tab_border_width=0
+    ), sg.Push()],
+]
