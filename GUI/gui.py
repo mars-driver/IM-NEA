@@ -3,18 +3,18 @@ from GUI import layouts, page_classes
 
 # GUI
 
-def GUI_signup_login(accounts, server_ip, port):
+def GUI_signup_login(server_ip, port):
 
     layout = layouts.main_layout
 
     window = sg.Window("sign up / log in", layout, resizable=True, finalize=True)
 
     pages = {
-        "-SIGNUP-": page_classes.SignUp("-SIGNUP-", window, accounts, layouts.signup_layout),
-        "-CUSTOMISE-": page_classes.Customise("-CUSTOMISE-", window, accounts, layouts.customise_profile_layout),
-        "-LOGIN-": page_classes.LogIn("-LOGIN-", window, accounts, layouts.login_layout),
-        "-HOME-": page_classes.Home("-HOME-", window, accounts, layouts.home_layout),
-        "-MESSAGING-": page_classes.Messaging("-MESSAGING-", window, accounts, layouts.messagingroom_layout, server_ip, port)
+        "-SIGNUP-": page_classes.SignUp("-SIGNUP-", window, layouts.signup_layout),
+        "-CUSTOMISE-": page_classes.Customise("-CUSTOMISE-", window, layouts.customise_profile_layout),
+        "-LOGIN-": page_classes.LogIn("-LOGIN-", window, layouts.login_layout),
+        "-HOME-": page_classes.Home("-HOME-", window, layouts.home_layout),
+        "-MESSAGING-": page_classes.Messaging("-MESSAGING-", window, layouts.messagingroom_layout, server_ip, port)
     }
 
     window["-SIGNUP-"].update(visible=True)

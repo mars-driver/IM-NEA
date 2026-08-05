@@ -1,34 +1,36 @@
 import re # regex module to assist with validity checks
+from database import db_calls
 
-def proto_valid_new_username(newUsername, accounts):
-    return newUsername.isalnum() and newUsername not in accounts
+def valid_new_username(new_username):
+    print(new_username)
+    return new_username.isalnum() and not db_calls.username_in_db(new_username)
 
-def proto_valid_email(newEmail):
-    newEmail = newEmail.split("@")
-    if len(newEmail) != 2:
+def valid_email(new_email):
+    new_email = new_email.split("@")
+    if len(new_email) != 2:
         return False
-    if "." not in newEmail[1]:
+    if "." not in new_email[1]:
         return False
     return True
 
-def proto_valid_password(newPassword):
-    if (len(newPassword) >= 8
-        and re.search("[a-z]", newPassword)
-        and re.search("[A-Z]", newPassword)
-        and re.search("[0-9]", newPassword)
-        and re.search("[`!\"£$%^&*()_+{}\[\]~:;@'|<,>.?/]", newPassword)):
+def valid_password(new_password):
+    if (len(new_password) >= 8
+        and re.search("[a-z]", new_password)
+        and re.search("[A-Z]", new_password)
+        and re.search("[0-9]", new_password)
+        and re.search("[`!\"£$%^&*()_+{}\[\]~:;@'|<,>.?/]", new_password)):
         return True
     return False
 
-def proto_sign_up(values, accounts):
+def sign_up(values):
     username, email, password, password_again = values
     if username == "admin": # added for testing
         return "Sign up successful."
-    while proto_valid_new_username(username, accounts) == False:
+    while not valid_new_username(username):
          return "Username invalid."
-    while proto_valid_email(email) == False:
+    while not valid_email(email):
         return "Email address invalid."
-    while proto_valid_password(password) == False:
+    while not valid_password(password):
         return "Password invalid."
     while password != password_again:
         return "Passwords do not match."

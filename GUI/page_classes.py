@@ -3,11 +3,10 @@ import threading
 
 
 class Page:
-    def __init__(self, new_name, new_window, new_accounts, new_layout):
+    def __init__(self, new_name, new_window, new_layout):
         self.__name = new_name
         self.__visibility = False
         self.__window = new_window
-        self.__accounts = new_accounts
         self.__layout = new_layout
 
     # GETTERS & SETTERS
@@ -15,8 +14,6 @@ class Page:
         return self.__name
     def get_window(self):
         return self.__window
-    def get_accounts(self):
-        return self.__accounts
     def set_visibility(self):
         self.__window[self.__name].update(visible=True)
 
@@ -26,8 +23,8 @@ class Page:
 
 
 class SignUp(Page):
-    def __init__(self, new_name, new_window, new_accounts, new_layout):
-        super().__init__(new_name, new_window, new_accounts, new_layout)
+    def __init__(self, new_name, new_window, new_layout):
+        super().__init__(new_name, new_window, new_layout)
 
     def run_events(self, pages, window_closed):
         while True:
@@ -36,7 +33,7 @@ class SignUp(Page):
                 break
             elif event == "sign up":
                 relevant_values = [values["SIGNUP-USERNAME"], values["SIGNUP-EMAIL"], values["SIGNUP-PASSWORD"], values["SIGNUP-CONFIRMPASSWORD"]]
-                result = sign_up.proto_sign_up(relevant_values, self.get_accounts())
+                result = sign_up.sign_up(relevant_values)
                 self.get_window()["SIGNUP-OUTPUT"].update(result)
                 if result == "Sign up successful.":
                     change_page(self.get_window(), self, pages["-CUSTOMISE-"])
@@ -55,7 +52,7 @@ class Customise(Page):
                 self.get_window()["CUSTOMISE-SHOWBIO"].update(values["CUSTOMISE-BIO"])
             elif event == "Confirm":
                 change_page(self.get_window(), self, pages["-HOME-"])
-                return pages["-MESSAGING-"]
+                return pages["-HOME-"]
             elif event == "log in here0":
                 change_page(self.get_window(), self, pages["-LOGIN-"])
                 return pages["-LOGIN-"]
@@ -68,7 +65,7 @@ class LogIn(Page):
                 break
             elif event == "log in":
                 relevant_values = [values["LOGIN-USERNAME"], values["LOGIN-PASSWORD"]]
-                result = log_in.proto_log_in(relevant_values, self.get_accounts())
+                result = log_in.log_in(relevant_values)
                 self.get_window()["LOGIN-OUTPUT"].update(result)
                 if result == "Login successful.":
                     change_page(self.get_window(), self, pages["-MESSAGING-"])
@@ -79,12 +76,15 @@ class LogIn(Page):
 
 class Home(Page):
     def run_events(self, pages, window_closed):
-        pass
+        while True:
+            event, values = self.get_window().read()
+            if window_closed(event):
+                break
 
 
 class Messaging(Page):
-    def __init__(self, new_name, new_window, new_accounts, new_layout, new_server_ip, new_port):
-        super().__init__(new_name, new_window, new_accounts, new_layout)
+    def __init__(self, new_name, new_window, new_layout, new_server_ip, new_port):
+        super().__init__(new_name, new_window, new_layout)
         self.__server_ip = new_server_ip
         self.__port = new_port
 

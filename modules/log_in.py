@@ -3,26 +3,28 @@
 import re # regex module to assist with validity checks
 import hashlib
 import secrets
+from database import db_calls
 
-def proto_username_exists(newUsername, accounts):
-    return newUsername in accounts
+def username_exists(new_username):
+    return db_calls.username_in_db(new_username)
 
-def proto_correct_password(account, newPassword):
-    correctPassword = account.hashedpassword
-    newPassword = str(hashlib.sha256((newPassword + account.salt).encode()).hexdigest())
-    return newPassword == correctPassword
+def correct_pass(username, new_password):
+    correct_password = db_calls.get_details(username, "hashed_password")
+    salt = db_calls.get_details(username, "salt")
+    new_password = str(hashlib.sha256((new_password + salt).encode()).hexdigest())
+    return new_password == correct_password
 
-def proto_is_locked(account):
-    return account.locked
+def is_locked(username):
+    return db_calls.get_details(username, "locked")
 
-def proto_log_in(values, accounts):
+def log_in(values):
     username, password = values
     if username == "admin": # added for testing
         return "Login successful."
-    if proto_username_exists(username, accounts) == False:
+    if not username_exists(username):
          return "Username invalid."
-    if proto_correct_password(accounts[username], password) == False:
+    if not correct_pass(username, password):
         return "Password invalid."
-    if proto_is_locked(accounts[username]) == True:
+    if is_locked(username):
         return "Account locked."
     return "Login successful."
