@@ -1,4 +1,5 @@
 import PySimpleGUI as sg # library for GUI
+from GUI import page_classes
 
 sg.theme("SystemDefault1")  # sets theme
 
@@ -177,15 +178,21 @@ messagingroom_layout = [[sg.VPush()],
               ],
               [sg.VPush()]]
 
-page_layouts = (signup_layout, customise_profile_layout, login_layout, home_layout, messagingroom_layout)
 
 
 
-# MAIN LAYOUT
+##### MAIN LAYOUT #####
 
-page_names = ("-SIGNUP-", "-CUSTOMISE-", "-LOGIN-", "-HOME-", "-MESSAGING-")
-assert len(page_names) == len(page_layouts) # so they don't get out of sync
-page_tabs = [[sg.Tab("", page_layouts[i], visible=False, k=page_names[i]) for i in range(len(page_names))]]
+pages = {
+    "-SIGNUP-": page_classes.SignUp("-SIGNUP-", signup_layout),
+    "-CUSTOMISE-": page_classes.Customise("-CUSTOMISE-", customise_profile_layout),
+    "-LOGIN-": page_classes.LogIn("-LOGIN-", login_layout),
+    "-RECOVERY-": page_classes.Recovery("-RECOVERY-", account_recovery_layout),
+    "-HOME-": page_classes.Home("-HOME-", home_layout),
+    "-MESSAGING-": page_classes.Messaging("-MESSAGING-", messagingroom_layout)
+}
+
+page_tabs = [[sg.Tab("", page.get_layout(), visible=False, k=page.get_name()) for page in pages.values()]]
 
 main_layout = [
     [sg.Text("")],

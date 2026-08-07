@@ -3,10 +3,10 @@ import threading
 
 
 class Page:
-    def __init__(self, new_name, new_window, new_layout):
+    def __init__(self, new_name, new_layout):
         self.__name = new_name
         self.__visibility = False
-        self.__window = new_window
+        self.__window = None
         self.__layout = new_layout
 
     # GETTERS & SETTERS
@@ -14,6 +14,10 @@ class Page:
         return self.__name
     def get_window(self):
         return self.__window
+    def get_layout(self):
+        return self.__layout
+    def set_window(self, new_window):
+        self.__window = new_window
     def set_visibility(self):
         self.__window[self.__name].update(visible=True)
 
@@ -23,9 +27,6 @@ class Page:
 
 
 class SignUp(Page):
-    def __init__(self, new_name, new_window, new_layout):
-        super().__init__(new_name, new_window, new_layout)
-
     def run_events(self, pages, window_closed):
         while True:
             event, values = self.get_window().read()
@@ -61,6 +62,7 @@ class LogIn(Page):
     def run_events(self, pages, window_closed):
         while True:
             event, values = self.get_window().read()
+            print(event)
             if window_closed(event):
                 break
             elif event == "log in":
@@ -73,6 +75,16 @@ class LogIn(Page):
             elif event == "sign up here":
                 change_page(self.get_window(), self, pages["-SIGNUP-"])
                 return pages["-SIGNUP-"]
+            elif event == "forgot password":
+                change_page(self.get_window(), self, pages["-RECOVERY-"])
+                return pages["-RECOVERY-"]
+
+class Recovery(Page):
+    def run_events(self, pages, window_closed):
+        while True:
+            event, values = self.get_window().read()
+            if window_closed(event):
+                break
 
 class Home(Page):
     def run_events(self, pages, window_closed):
@@ -83,16 +95,20 @@ class Home(Page):
 
 
 class Messaging(Page):
-    def __init__(self, new_name, new_window, new_layout, new_server_ip, new_port):
-        super().__init__(new_name, new_window, new_layout)
-        self.__server_ip = new_server_ip
-        self.__port = new_port
+    def __init__(self, new_name, new_layout):
+        super().__init__(new_name, new_layout)
+        self.__server_ip = None
+        self.__port = None
 
     # GETTERS & SETTERS
     def get_server_ip(self):
         return self.__server_ip
     def get_port(self):
         return self.__port
+    def set_server_ip(self, new_server_ip):
+        self.__server_ip = new_server_ip
+    def set_port(self, new_port):
+        self.__port = new_port
 
     # METHODS
     def run_events(self, pages, window_closed):

@@ -1,21 +1,19 @@
 import PySimpleGUI as sg # library for GUI
-from GUI import layouts, page_classes
+from GUI import layouts
 
 # GUI
 
 def GUI_signup_login(server_ip, port):
 
     layout = layouts.main_layout
-
     window = sg.Window("sign up / log in", layout, resizable=True, finalize=True)
 
-    pages = {
-        "-SIGNUP-": page_classes.SignUp("-SIGNUP-", window, layouts.signup_layout),
-        "-CUSTOMISE-": page_classes.Customise("-CUSTOMISE-", window, layouts.customise_profile_layout),
-        "-LOGIN-": page_classes.LogIn("-LOGIN-", window, layouts.login_layout),
-        "-HOME-": page_classes.Home("-HOME-", window, layouts.home_layout),
-        "-MESSAGING-": page_classes.Messaging("-MESSAGING-", window, layouts.messagingroom_layout, server_ip, port)
-    }
+    pages = layouts.pages
+    for page in pages.values():
+        page.set_window(window)
+    pages["-MESSAGING-"].set_server_ip(server_ip)
+    pages["-MESSAGING-"].set_port(port)
+
 
     window["-SIGNUP-"].update(visible=True)
     current_page = pages["-SIGNUP-"]
