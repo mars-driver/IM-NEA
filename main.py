@@ -1,4 +1,4 @@
-from GUI import gui
+from GUI.gui import GUI_main
 
 # CONSTANTS
 homehost = "192.168.1.122"
@@ -7,4 +7,4 @@ localhost = "127.0.0.1"
 dadhost = "127.0.1.1"
 my_port = 13108
 
-gui.GUI_signup_login(homehost, my_port)
+GUI_main(homehost, my_port)

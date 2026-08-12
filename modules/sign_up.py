@@ -1,4 +1,6 @@
-import re # regex module to assist with validity checks
+from re import search # regex module to assist with validity checks
+from secrets import token_hex # module to generate cryptographically secure numbers
+from subroutines import generate_hashed_password
 from database import db_calls
 
 def valid_new_username(new_username):
@@ -15,10 +17,10 @@ def valid_email(new_email):
 
 def valid_password(new_password):
     if (len(new_password) >= 8
-        and re.search("[a-z]", new_password)
-        and re.search("[A-Z]", new_password)
-        and re.search("[0-9]", new_password)
-        and re.search("[`!\"£$%^&*()_+{}\[\]~:;@'|<,>.?/]", new_password)):
+        and search("[a-z]", new_password)
+        and search("[A-Z]", new_password)
+        and search("[0-9]", new_password)
+        and search("[`!\"£$%^&*()_+{}\[\]~:;@'|<,>.?/]", new_password)):
         return True
     return False
 
@@ -26,12 +28,20 @@ def sign_up(values):
     username, email, password, password_again = values
     if username == "admin": # added for testing
         return "Sign up successful."
-    while not valid_new_username(username):
+    if not valid_new_username(username):
          return "Username invalid."
-    while not valid_email(email):
+    if not valid_email(email):
         return "Email address invalid."
-    while not valid_password(password):
+    if not valid_password(password):
         return "Password invalid."
-    while password != password_again:
+    if password != password_again:
         return "Passwords do not match."
+    new_salt = generate_salt()
+    hashed_password = generate_hashed_password(password, new_salt)
+    db_calls.add_user(username, email, hashed_password, new_salt)
     return "Sign up successful."
+
+def generate_salt():
+    len_salt = 8
+    new_salt = token_hex(len_salt)
+    return new_salt

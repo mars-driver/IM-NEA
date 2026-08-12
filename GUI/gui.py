@@ -3,7 +3,7 @@ from GUI import layouts
 
 # GUI
 
-def GUI_signup_login(server_ip, port):
+def GUI_main(server_ip, port):
 
     layout = layouts.main_layout
     window = sg.Window("sign up / log in", layout, resizable=True, finalize=True)

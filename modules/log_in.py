@@ -1,9 +1,7 @@
 # prototype to test logging in
 
-import re # regex module to assist with validity checks
-import hashlib
-import secrets
 from database import db_calls
+from subroutines import generate_hashed_password
 
 def username_exists(new_username):
     return db_calls.username_in_db(new_username)
@@ -11,7 +9,7 @@ def username_exists(new_username):
 def correct_pass(username, new_password):
     correct_password = db_calls.get_details(username, "hashed_password")
     salt = db_calls.get_details(username, "salt")
-    new_password = str(hashlib.sha256((new_password + salt).encode()).hexdigest())
+    new_password = generate_hashed_password(username, salt)
     return new_password == correct_password
 
 def is_locked(username):

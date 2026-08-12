@@ -1,5 +1,5 @@
 from modules import log_in, sign_up, client
-import threading
+from threading import Thread
 
 
 class Page:
@@ -33,15 +33,13 @@ class SignUp(Page):
             if window_closed(event):
                 break
             elif event == "sign up":
-                relevant_values = [values["SIGNUP-USERNAME"], values["SIGNUP-EMAIL"], values["SIGNUP-PASSWORD"], values["SIGNUP-CONFIRMPASSWORD"]]
+                relevant_values = [values["-SIGNUP-USERNAME-"], values["-SIGNUP-EMAIL-"], values["-SIGNUP-PASSWORD-"], values["-SIGNUP-CONFIRMPASSWORD-"]]
                 result = sign_up.sign_up(relevant_values)
-                self.get_window()["SIGNUP-OUTPUT"].update(result)
+                self.get_window()["-SIGNUP-OUTPUT-"].update(result)
                 if result == "Sign up successful.":
-                    change_page(self.get_window(), self, pages["-CUSTOMISE-"])
-                    return pages["-CUSTOMISE-"]
+                    return change_page(self.get_window(), self, pages["-CUSTOMISE-"])
             elif event == "log in here":
-                change_page(self.get_window(), self, pages["-LOGIN-"])
-                return pages["-LOGIN-"]
+                return change_page(self.get_window(), self, pages["-LOGIN-"])
 
 class Customise(Page):
     def run_events(self, pages, window_closed):
@@ -50,13 +48,11 @@ class Customise(Page):
             if window_closed(event):
                 break
             elif event == "save":
-                self.get_window()["CUSTOMISE-SHOWBIO"].update(values["CUSTOMISE-BIO"])
+                self.get_window()["-CUSTOMISE-SHOWBIO-"].update(values["-CUSTOMISE-BIO-"])
             elif event == "Confirm":
-                change_page(self.get_window(), self, pages["-HOME-"])
-                return pages["-HOME-"]
+                return change_page(self.get_window(), self, pages["-HOME-"])
             elif event == "log in here0":
-                change_page(self.get_window(), self, pages["-LOGIN-"])
-                return pages["-LOGIN-"]
+                return change_page(self.get_window(), self, pages["-LOGIN-"])
 
 class LogIn(Page):
     def run_events(self, pages, window_closed):
@@ -66,18 +62,15 @@ class LogIn(Page):
             if window_closed(event):
                 break
             elif event == "log in":
-                relevant_values = [values["LOGIN-USERNAME"], values["LOGIN-PASSWORD"]]
+                relevant_values = [values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]]
                 result = log_in.log_in(relevant_values)
-                self.get_window()["LOGIN-OUTPUT"].update(result)
+                self.get_window()["-LOGIN-OUTPUT-"].update(result)
                 if result == "Login successful.":
-                    change_page(self.get_window(), self, pages["-MESSAGING-"])
-                    return pages["-MESSAGING-"]
+                    return change_page(self.get_window(), self, pages["-MESSAGING-"])
             elif event == "sign up here":
-                change_page(self.get_window(), self, pages["-SIGNUP-"])
-                return pages["-SIGNUP-"]
+                return change_page(self.get_window(), self, pages["-SIGNUP-"])
             elif event == "forgot password":
-                change_page(self.get_window(), self, pages["-RECOVERY-"])
-                return pages["-RECOVERY-"]
+                return change_page(self.get_window(), self, pages["-RECOVERY-"])
 
 class Recovery(Page):
     def run_events(self, pages, window_closed):
@@ -85,6 +78,8 @@ class Recovery(Page):
             event, values = self.get_window().read()
             if window_closed(event):
                 break
+            if event == "back to log in":
+                return change_page(self.get_window(), self, pages["-LOGIN-"])
 
 class Home(Page):
     def run_events(self, pages, window_closed):
@@ -126,7 +121,7 @@ class Messaging(Page):
                 client_object.connect(name)
                 connected = True
 
-        threading.Thread(target=client_object.receive).start()
+        Thread(target=client_object.receive).start()
         self.get_window()["-PROMPT-"].update("Type message here:")
 
         while True:
@@ -160,3 +155,4 @@ class Messaging(Page):
 def change_page(window, current_page, new_page):
     window[new_page.get_name()].update(visible=True)
     window[current_page.get_name()].update(visible=False)
+    return new_page

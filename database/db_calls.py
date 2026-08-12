@@ -15,3 +15,11 @@ def get_details(username, data):
     data = c.fetchone()
     con.close()
     return data
+
+def add_user(username, email, hashed_password, salt):
+    con = sqlite3.connect("C:\\Users\miran\PycharmProjects\IM-NEA\database\database.db")
+    c = con.cursor()
+    c.execute("INSERT INTO account (username, email, hashed_password, salt, locked) VALUES (?, ?, ?, ?, False);",
+              (username, email, hashed_password, salt))
+    con.commit()
+    con.close()

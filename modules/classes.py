@@ -12,5 +12,11 @@ class ChatRoom(Chat):
 
 
 class User:
-    def __init__(self, new_username):
+    def __init__(self):
+        self.__username = None
+
+    # GETTERS AND SETTERS
+    def get_username(self):
+        return self.__username
+    def set_username(self, new_username):
         self.__username = new_username
