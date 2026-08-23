@@ -9,7 +9,6 @@ title_size = 30
 subtitle_size = 20
 input_output_size = 30
 main_button_size = 18
-pfp_size = 5
 dual_frame_size = (250,250)
 dual_frame_button_size = (27,1)
 textbox_size = (30,7)
@@ -63,7 +62,7 @@ customise_profile_layout = [
     [sg.Push(), sg.Frame("", [
         [sg.Text("Profile Preview:")],
         [sg.Frame("", [
-            [sg.Image("media\\no_pfp.png", subsample=pfp_size, key="-SHOW-PFP-"), sg.Frame("", [
+            [sg.Image("media\\no_pfp.png", key="-SHOW-PFP-"), sg.Frame("", [
                 [sg.Text("example_username", size=input_output_size, key="-CUSTOMISE-USERNAME-")],
                 [sg.Text("• Online", size=input_output_size)]
             ], border_width=False)],
@@ -71,7 +70,8 @@ customise_profile_layout = [
             [sg.Text(key="-CUSTOMISE-SHOWBIO-", size=textbox_size, background_color="#ffffff")]
         ], border_width=False)]], size=dual_frame_size, border_width=False), sg.Frame("", [
         [sg.Text("Upload profile picture")],
-        [sg.FileBrowse(button_text="choose file", size=dual_frame_button_size, enable_events =True, key="-CUSTOMISE-PFP-")],
+        [sg.FileBrowse(button_text="choose file", file_types=(('PNG Image', '.png'),('JPEG Image', '.jpg')),
+                       size=dual_frame_button_size, enable_events=True, key="-CUSTOMISE-PFP-")],
         [sg.Text("Write bio")],
         [sg.Multiline(default_text="Start typing...",key="-CUSTOMISE-BIO-", size=textbox_size, background_color="#ffffff")],
         [sg.Button("save")]
@@ -153,7 +153,7 @@ chatrooms = [
 friends_layout = [
     [sg.Frame("", [ #todo remove border
                 [sg.VPush()], [
-                sg.Column([[sg.Image("media\\no_pfp.png", subsample=pfp_size, enable_events=True, k=f"-PFP{i}-")]]),
+                sg.Column([[sg.Image("media\\no_pfp.png", enable_events=True, k=f"-PFP{i}-")]]),
                 sg.Column([[sg.Button(friends[i][0], font=("Default font", 15), border_width=0, k=f"-FRIEND{i}-")],
                            [sg.Button(friends[i][1], font=("Default font", 12),
                                       border_width=1, k=f"-LASTMESSAGE{i}-")]])],

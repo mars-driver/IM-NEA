@@ -1,6 +1,6 @@
 from modules import log_in, sign_up, client
 from threading import Thread
-from modules import classes
+from PIL import Image
 
 
 class Page:
@@ -9,7 +9,6 @@ class Page:
         self.__visibility = False
         self.__window = None
         self.__layout = new_layout
-        #self.__user = classes.User()
 
     # GETTERS & SETTERS
     def get_name(self):
@@ -18,14 +17,11 @@ class Page:
         return self.__window
     def get_layout(self):
         return self.__layout
-    def get_user(self):
-        return self.__user
     def set_window(self, new_window):
         self.__window = new_window
     def set_visibility(self):
         self.__window[self.__name].update(visible=True)
-    def set_user(self, new_user):
-        self.__user = new_user
+
 
     # METHODS
     def run_events(self, user, pages, window_closed):
@@ -76,7 +72,12 @@ class Customise(Page):
                 return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-"])
                 return return_values
             elif event == "-CUSTOMISE-PFP-":
-                new_pfp = values["-CUSTOMISE-PFP-"]
+                new_pfp_raw = values["-CUSTOMISE-PFP-"]
+                print(new_pfp_raw)
+                new_pfp_image = Image.open(new_pfp_raw).resize((50,50))
+                new_pfp_image.save("media\\pfp.png", format="png")
+                new_pfp_image.close()
+                new_pfp = "media\\pfp.png"
                 self.get_window()["-SHOW-PFP-"].update(new_pfp)
                 user.set_pfp(new_pfp)
 
