@@ -1,6 +1,6 @@
 from re import search # regex module to assist with validity checks
 from secrets import token_hex # module to generate cryptographically secure numbers
-from subroutines import generate_hashed_password
+from modules.subroutines import generate_hashed_password
 from database import db_calls
 
 def valid_new_username(new_username):

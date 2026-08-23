@@ -1,7 +1,7 @@
 # prototype to test logging in
 
 from database import db_calls
-from subroutines import generate_hashed_password
+from modules.subroutines import generate_hashed_password
 
 def username_exists(new_username):
     return db_calls.username_in_db(new_username)

@@ -63,7 +63,7 @@ customise_profile_layout = [
     [sg.Push(), sg.Frame("", [
         [sg.Text("Profile Preview:")],
         [sg.Frame("", [
-            [sg.Image("media\\no_pfp.png", subsample=pfp_size), sg.Frame("", [
+            [sg.Image("media\\no_pfp.png", subsample=pfp_size, key="-SHOW-PFP-"), sg.Frame("", [
                 [sg.Text("example_username", size=input_output_size, key="-CUSTOMISE-USERNAME-")],
                 [sg.Text("• Online", size=input_output_size)]
             ], border_width=False)],
@@ -71,7 +71,7 @@ customise_profile_layout = [
             [sg.Text(key="-CUSTOMISE-SHOWBIO-", size=textbox_size, background_color="#ffffff")]
         ], border_width=False)]], size=dual_frame_size, border_width=False), sg.Frame("", [
         [sg.Text("Upload profile picture")],
-        [sg.FileBrowse(button_text="choose file", size=dual_frame_button_size, key="-CUSTOMISE-PFP-")],
+        [sg.FileBrowse(button_text="choose file", size=dual_frame_button_size, enable_events =True, key="-CUSTOMISE-PFP-")],
         [sg.Text("Write bio")],
         [sg.Multiline(default_text="Start typing...",key="-CUSTOMISE-BIO-", size=textbox_size, background_color="#ffffff")],
         [sg.Button("save")]

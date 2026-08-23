@@ -1,5 +1,6 @@
 import PySimpleGUI as sg # library for GUI
 from GUI import layouts
+from modules.classes import User
 
 # GUI
 
@@ -7,6 +8,7 @@ def GUI_main(server_ip, port):
 
     layout = layouts.main_layout
     window = sg.Window("sign up / log in", layout, resizable=True, finalize=True)
+    current_user = User()
 
     pages = layouts.pages
     for page in pages.values():
@@ -19,10 +21,12 @@ def GUI_main(server_ip, port):
     current_page = pages["-SIGNUP-"]
 
     while True:
-        if current_page is None:
+        return_values = current_page.run_events(current_user, pages, window_closed)
+        if return_values is None:
             break
         else:
-            current_page = current_page.run_events(pages, window_closed)
+            current_user = return_values.get("-CURRENT-USER-")
+            current_page = return_values.get("-NEW-PAGE-")
     window.close()
 
 def window_closed(event):
