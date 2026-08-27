@@ -145,6 +145,7 @@ friends = [
     ("Friend 323", "wyu2"),
     ("Friend 67", "buns buns buns"),
 ]
+friends = []
 
 chatrooms = [
     ("name 1", )
@@ -182,14 +183,16 @@ home_layout = [
         sg.Push(),
         # column 1 - Friends List
         sg.Frame("", [ #todo remove border
-            [sg.Text("Friends List:", font= ("Default font", 30))],
+            [sg.Text("Friends List:", font= ("Default font", title_size))],
             [sg.Column(friends_layout, scrollable=True)]
         ], border_width=1),
         # column 2 - Chat Rooms
         sg.Frame("", [ #todo remove border
-            [sg.Text("Open chat rooms", font= ("Default font", subtitle_size))],
+            [sg.Text("Open chat rooms", font= ("Default font", title_size))],
+            [sg.Text("No open rooms! Click below to open a new room")],
             [sg.Column([#chatrooms_layout goes here
-                        ])]
+                        ])],
+            [sg.Button("Create new room", font=("Default font", main_button_size), k="-NEW-ROOM-")]
         ], border_width=1),
         sg.Push()
     ],

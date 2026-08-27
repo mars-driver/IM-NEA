@@ -73,7 +73,6 @@ class Customise(Page):
                 return return_values
             elif event == "-CUSTOMISE-PFP-":
                 new_pfp_raw = values["-CUSTOMISE-PFP-"]
-                print(new_pfp_raw)
                 new_pfp_image = Image.open(new_pfp_raw).resize((50,50))
                 new_pfp_image.save("media\\pfp.png", format="png")
                 new_pfp_image.close()
@@ -87,14 +86,13 @@ class LogIn(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
         while True:
             event, values = self.get_window().read()
-            print(event)
             if window_closed(event):
                 break
             elif event == "log in":
                 result = log_in.log_in((values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]))
                 self.get_window()["-LOGIN-OUTPUT-"].update(result)
                 if result == "Login successful.":
-                    return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-MESSAGING-"])
+                    return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-"])
                     return return_values
             elif event == "sign up here":
                 return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-SIGNUP-"])
@@ -119,8 +117,11 @@ class Home(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
         while True:
             event, values = self.get_window().read()
+            print(event, values) #todo remove
             if window_closed(event):
                 break
+            if event == "-NEW-ROOM-":
+                pass
 
 
 class Messaging(Page):
@@ -149,7 +150,7 @@ class Messaging(Page):
 
         while not connected:
             event, values = self.get_window().read()
-            print("event:", event, "values:", values)
+            print("event:", event, "values:", values) #todo remove
             if window_closed(event):
                 break
             elif event == "send":
