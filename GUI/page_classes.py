@@ -1,4 +1,6 @@
-from modules import log_in, sign_up, client
+# ACCESSES: MODULES
+
+from modules import log_in, sign_up
 from threading import Thread
 from PIL import Image
 
@@ -27,15 +29,15 @@ class Page:
     def run_events(self, user, pages, window_closed):
         print("Error: No events for superclass Page")
 
-
 class SignUp(Page):
     def run_events(self, user, pages, window_closed):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
         while True:
             event, values = self.get_window().read()
+            print(event) #todo
             if window_closed(event):
                 break
-            elif event == "sign up":
+            elif event == "-SIGN-UP-":
                 result = sign_up.sign_up((
                     values["-SIGNUP-USERNAME-"],
                     values["-SIGNUP-EMAIL-"],
@@ -46,10 +48,12 @@ class SignUp(Page):
                 if result == "Sign up successful.":
                     username = values["-SIGNUP-USERNAME-"]
                     user.set_username(username)
-                    return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CUSTOMISE-"])
+                    print("changing to customise") #todo
+                    return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CUSTOMISE-PAGE-"])
+                    print("updated values")
                     return return_values
-            elif event == "log in here":
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-"])
+            elif event == "-LOGIN-FROM-SIGNUP-":
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-PAGE-"])
                 return return_values
 
 class Customise(Page):
@@ -61,15 +65,15 @@ class Customise(Page):
             event, values = self.get_window().read()
             if window_closed(event):
                 break
-            elif event == "save":
+            elif event == "-SAVE-":
                 new_bio = values["-CUSTOMISE-BIO-"]
                 self.get_window()["-CUSTOMISE-SHOWBIO-"].update(new_bio)
                 user.set_bio(new_bio)
-            elif event == "Confirm":
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-"])
+            elif event == "-CONFIRM-":
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CONNECT-PAGE-"])
                 return return_values
-            elif event == "log in here0":
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-"])
+            elif event == "-LOGIN-FROM-CUSTOMISE-":
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-PAGE-"])
                 return return_values
             elif event == "-CUSTOMISE-PFP-":
                 new_pfp_raw = values["-CUSTOMISE-PFP-"]
@@ -88,17 +92,17 @@ class LogIn(Page):
             event, values = self.get_window().read()
             if window_closed(event):
                 break
-            elif event == "log in":
+            elif event == "-LOGIN-":
                 result = log_in.log_in((values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]))
                 self.get_window()["-LOGIN-OUTPUT-"].update(result)
                 if result == "Login successful.":
-                    return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-"])
+                    return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CONNECT-PAGE-"])
                     return return_values
-            elif event == "sign up here":
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-SIGNUP-"])
+            elif event == "-SIGNUP-FROM-LOGIN-":
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-SIGNUP-PAGE-"])
                 return return_values
-            elif event == "forgot password":
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-RECOVERY-"])
+            elif event == "-RECOVERY-FROM-LOGIN-":
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-RECOVERY-PAGE-"])
                 return return_values
 
 class Recovery(Page):
@@ -108,9 +112,37 @@ class Recovery(Page):
             event, values = self.get_window().read()
             if window_closed(event):
                 break
-            if event == "back to log in":
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-"])
+            if event == "-LOGIN-FROM-RECOVERY-":
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-PAGE-"])
                 return return_values
+            if event == "-SEND-EMAIL-":
+                pass
+
+class Connect(Page):
+    def __init__(self, new_name, new_layout):
+        super().__init__(new_name, new_layout)
+        self.__client_object = None
+
+    # GETTERS & SETTERS
+    def get_client(self):
+        return self.__client_object
+    def set_client(self, new_client):
+        self.__client_object = new_client
+
+    def run_events(self, user, pages, window_closed):
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+        connected = False
+        while not connected:
+            event, values = self.get_window().read()
+            print("event:", event, "values:", values) #todo remove
+            if window_closed(event):
+                break
+            elif event == "-CONNECT-":
+                name = user.get_username()
+                self.get_client().connect(name)
+                connected = True
+        return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-PAGE-"])
+        return return_values
 
 class Home(Page):
     def run_events(self, user, pages, window_closed):
@@ -121,52 +153,37 @@ class Home(Page):
             if window_closed(event):
                 break
             if event == "-NEW-ROOM-":
-                pass
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-MESSAGING-PAGE-"])
+                return return_values
 
 
 class Messaging(Page):
     def __init__(self, new_name, new_layout):
         super().__init__(new_name, new_layout)
-        self.__server_ip = None
-        self.__port = None
+        self.__client_object = None
 
     # GETTERS & SETTERS
-    def get_server_ip(self):
-        return self.__server_ip
-    def get_port(self):
-        return self.__port
-    def set_server_ip(self, new_server_ip):
-        self.__server_ip = new_server_ip
-    def set_port(self, new_port):
-        self.__port = new_port
+    def get_client(self):
+        return self.__client_object
+    def set_client(self, new_client):
+        self.__client_object = new_client
 
     # METHODS
     def run_events(self, user, pages, window_closed):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
 
-        client_object = client.ChatClient(self.get_server_ip(), self.get_port(), self.get_window())
-        connected = False
+        client_object = self.get_client()
         messages = []
-
-        while not connected:
-            event, values = self.get_window().read()
-            print("event:", event, "values:", values) #todo remove
-            if window_closed(event):
-                break
-            elif event == "send":
-                name = values["-MESSAGE-"]
-                client_object.connect(name)
-                connected = True
-
         Thread(target=client_object.receive).start()
         self.get_window()["-PROMPT-"].update("Type message here:")
 
         while True:
             event, values = self.get_window().read()
+            print(event, values)
             if window_closed(event):
                 client_object.socket.close()
                 break
-            elif event == "send":
+            elif event == "-SEND-MESSAGE-":
                 message = values["-MESSAGE-"]
                 messages.append(("You:", message))
                 client_object.send(message)
@@ -189,7 +206,7 @@ class Messaging(Page):
 
 
 
-def change_page(window, current_page_object, new_page_object):
+def change_page(window, current_page_object, new_page_object): #todo: move this under Page?
     window[new_page_object.get_name()].update(visible=True)
     window[current_page_object.get_name()].update(visible=False)
     return new_page_object
