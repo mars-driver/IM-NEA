@@ -212,6 +212,7 @@ home_layout = [
 
 # Messaging
 # todo wip
+# todo back button
 
 messagingroom_layout = [[sg.VPush()],
               [sg.Text("NOT CONNECTED")],

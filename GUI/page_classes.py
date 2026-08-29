@@ -34,7 +34,6 @@ class SignUp(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
         while True:
             event, values = self.get_window().read()
-            print(event) #todo
             if window_closed(event):
                 break
             elif event == "-SIGN-UP-":
@@ -48,9 +47,7 @@ class SignUp(Page):
                 if result == "Sign up successful.":
                     username = values["-SIGNUP-USERNAME-"]
                     user.set_username(username)
-                    print("changing to customise") #todo
                     return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CUSTOMISE-PAGE-"])
-                    print("updated values")
                     return return_values
             elif event == "-LOGIN-FROM-SIGNUP-":
                 return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-PAGE-"])
@@ -134,7 +131,6 @@ class Connect(Page):
         connected = False
         while not connected:
             event, values = self.get_window().read()
-            print("event:", event, "values:", values) #todo remove
             if window_closed(event):
                 break
             elif event == "-CONNECT-":
@@ -149,7 +145,6 @@ class Home(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
         while True:
             event, values = self.get_window().read()
-            print(event, values) #todo remove
             if window_closed(event):
                 break
             if event == "-NEW-ROOM-":
@@ -179,7 +174,6 @@ class Messaging(Page):
 
         while True:
             event, values = self.get_window().read()
-            print(event, values)
             if window_closed(event):
                 client_object.socket.close()
                 break

@@ -8,10 +8,10 @@ def username_in_db(username):
     con.close()
     return user_exists
 
-def get_details(username, data):
+def get_user(username):
     con = sqlite3.connect("C:\\Users\miran\PycharmProjects\IM-NEA\database\database.db")
     c = con.cursor()
-    c.execute("SELECT ? FROM account WHERE username = ?;", (data, username))
+    c.execute("SELECT * FROM account WHERE username = ?;", (username,))
     data = c.fetchone()
     con.close()
     return data

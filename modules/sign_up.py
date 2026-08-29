@@ -4,7 +4,6 @@ from modules.subroutines import generate_hashed_password
 from database import db_calls
 
 def valid_new_username(new_username):
-    print(new_username)
     return new_username.isalnum() and not db_calls.username_in_db(new_username)
 
 def valid_email(new_email):
