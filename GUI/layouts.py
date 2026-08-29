@@ -9,11 +9,13 @@ sg.theme("SystemDefault1")  # sets theme
 app_name_size = 40
 title_size = 30
 subtitle_size = 20
-input_output_size = 30
+input_output_size = 28
 main_button_size = 18
 dual_frame_size = (250,250)
 dual_frame_button_size = (27,1)
 textbox_size = (30,7)
+initial_metadata = 0
+icon_size = 4
 background_colour = "grey94"
 
 # LAYOUTS
@@ -39,7 +41,7 @@ signup_layout = [
     [sg.Push(), sg.Frame("", [
         [sg.VPush()],
         [sg.Text("enter username:")],
-        [sg.Input(k="-SIGNUP-USERNAME-", default_text="admin")],
+        [sg.Input(default_text="admin", k="-SIGNUP-USERNAME-")],
         [sg.Text("enter email address:")],
         [sg.Input(k="-SIGNUP-EMAIL-")],
         [sg.VPush()],
@@ -47,9 +49,11 @@ signup_layout = [
     ], s=dual_frame_size, border_width=False), sg. Frame("", [
         [sg.VPush()],
         [sg.Text("enter password:")],
-        [sg.Input(k="-SIGNUP-PASSWORD-", password_char="*")],
+        [sg.Input(password_char="*", s=input_output_size, k="-SIGNUP-PASSWORD-"),
+         sg.Button("", image_filename="media\\eye_open.png", image_subsample=icon_size, metadata=initial_metadata, k="-VIEW-SIGNUP-PASSWORD-")],
         [sg.Text("confirm password:")],
-        [sg.Input(k="-SIGNUP-CONFIRMPASSWORD-", password_char="*")],
+        [sg.Input(password_char="*", s=input_output_size, k="-SIGNUP-CONFIRMPASSWORD-"),
+         sg.Button("", image_filename="media\\eye_open.png", image_subsample=icon_size, metadata=initial_metadata, k="-VIEW-SIGNUP-CONFIRMPASSWORD-")],
         [sg.VPush()],
         [sg.Text("")]
     ], s=dual_frame_size, border_width=False), sg.Push()],
@@ -103,10 +107,11 @@ login_layout = [
     [sg.Push(),
      sg.Frame("", [
         [sg.Text("enter username:")],
-        [sg.Push(), sg.Input(k="-LOGIN-USERNAME-", default_text="admin"), sg.Push()],
+        [sg.Input(expand_x=True, k="-LOGIN-USERNAME-", default_text="admin"),],
         [sg.Text("")],
         [sg.Text("enter password:")],
-        [sg.Push(), sg.Input(k="-LOGIN-PASSWORD-"), sg.Push()],
+        [sg.Input(password_char="*", expand_x=True, k="-LOGIN-PASSWORD-"),
+         sg.Button("", image_filename="media\\eye_open.png", image_subsample=icon_size, metadata=initial_metadata, k="-VIEW-LOGIN-PASSWORD-")],
         [sg.Button("forgot password", k="-RECOVERY-FROM-LOGIN-")],
         [sg.Text(k="-LOGIN-OUTPUT-")],
     ], border_width=False),

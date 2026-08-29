@@ -12,6 +12,15 @@ class Page:
         self.__window = None
         self.__layout = new_layout
 
+    def show_password(self, event):
+        switch = (self.get_window()[event].metadata + 1) % 2  # keeps track of whether button is on or off
+        element = event[5::]  # gets the name of the element (removes "-VIEW")
+        char = ("*", "")[switch]  # switches between which one to show
+        icon = ("media\\eye_open.png", "media\\eye_shut.png")[switch] # switches between icons
+        self.get_window()[element].update(password_char=char)
+        self.get_window()[event].update(image_filename=icon, image_subsample=4)
+        self.get_window()[event].metadata = switch
+
     # GETTERS & SETTERS
     def get_name(self):
         return self.__name
@@ -52,6 +61,9 @@ class SignUp(Page):
             elif event == "-LOGIN-FROM-SIGNUP-":
                 return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-LOGIN-PAGE-"])
                 return return_values
+            elif event in ("-VIEW-SIGNUP-PASSWORD-", "-VIEW-SIGNUP-CONFIRMPASSWORD-"):
+                self.show_password(event)
+
 
 class Customise(Page):
     def run_events(self, user, pages, window_closed):
@@ -101,6 +113,8 @@ class LogIn(Page):
             elif event == "-RECOVERY-FROM-LOGIN-":
                 return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-RECOVERY-PAGE-"])
                 return return_values
+            elif event == "-VIEW-LOGIN-PASSWORD-":
+                self.show_password(event)
 
 class Recovery(Page):
     def run_events(self, user, pages, window_closed):
