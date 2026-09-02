@@ -106,6 +106,8 @@ class LogIn(Page):
                 result = log_in.log_in((values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]))
                 self.get_window()["-LOGIN-OUTPUT-"].update(result)
                 if result == "Login successful.":
+                    username = values["-LOGIN-USERNAME-"]
+                    user.set_username(username)
                     self.get_window()["-LOGGED-IN?-"].update("LOGGED IN")
                     return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CONNECT-PAGE-"])
                     return return_values
