@@ -79,6 +79,7 @@ class Customise(Page):
                 self.get_window()["-CUSTOMISE-SHOWBIO-"].update(new_bio)
                 user.set_bio(new_bio)
             elif event == "-CONFIRM-":
+                self.get_window()["-LOGGED-IN?-"].update("LOGGED IN")
                 return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CONNECT-PAGE-"])
                 return return_values
             elif event == "-LOGIN-FROM-CUSTOMISE-":
@@ -105,6 +106,7 @@ class LogIn(Page):
                 result = log_in.log_in((values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]))
                 self.get_window()["-LOGIN-OUTPUT-"].update(result)
                 if result == "Login successful.":
+                    self.get_window()["-LOGGED-IN?-"].update("LOGGED IN")
                     return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CONNECT-PAGE-"])
                     return return_values
             elif event == "-SIGNUP-FROM-LOGIN-":
@@ -142,17 +144,17 @@ class Connect(Page):
 
     def run_events(self, user, pages, window_closed):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
-        connected = False
-        while not connected:
+        while True:
             event, values = self.get_window().read()
             if window_closed(event):
                 break
             elif event == "-CONNECT-":
                 name = user.get_username()
+                print("name:", name)
                 self.get_client().connect(name)
-                connected = True
-        return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-PAGE-"])
-        return return_values
+                self.get_window()["-CONNECTED?-"].update("CONNECTED")
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-PAGE-"])
+                return return_values
 
 class Home(Page):
     def run_events(self, user, pages, window_closed):

@@ -7,11 +7,14 @@ sg.theme("SystemDefault1")  # sets theme
 
 # CONSTANTS
 app_name_size = 40
+main_font = "Default font"
 title_size = 30
 subtitle_size = 20
 input_output_size = 28
 main_button_size = 18
+single_frame_size = (500, 250)
 dual_frame_size = (250,250)
+main_frame_size = (1000,1000)
 dual_frame_button_size = (27,1)
 textbox_size = (30,7)
 initial_metadata = 0
@@ -24,7 +27,7 @@ background_colour = "grey94"
 
 connection_layout = [
     [sg.VPush()],
-    [sg.Push(), sg.Text("NOT CONNECTED", font=("Default font", title_size)), sg.Push()],
+    [sg.Push(), sg.Text("NOT CONNECTED", font=(main_font, title_size)), sg.Push()],
     [sg.Push(), sg.Button("Connect", k="-CONNECT-"), sg.Push()],
     [sg.VPush()]
 ]
@@ -37,7 +40,7 @@ signup_layout = [
         [sg.Button("log in here", s=main_button_size, k="-LOGIN-FROM-SIGNUP-")],
     ], border_width=False)],
     [sg.Text("")],
-    [sg.Push(), sg.Text("Sign Up", font=("Default font", title_size)), sg.Push()],
+    [sg.Push(), sg.Text("Sign Up", font=(main_font, title_size)), sg.Push()],
     [sg.Push(), sg.Frame("", [
         [sg.VPush()],
         [sg.Text("enter username:")],
@@ -57,7 +60,7 @@ signup_layout = [
         [sg.VPush()],
         [sg.Text("")]
     ], s=dual_frame_size, border_width=False), sg.Push()],
-    [sg.Push(), sg.Button("sign up", font=("Default font", subtitle_size), k="-SIGN-UP-"), sg.Push()],
+    [sg.Push(), sg.Button("sign up", font=(main_font, subtitle_size), k="-SIGN-UP-"), sg.Push()],
     [sg.Text("")]
 ]
 
@@ -71,7 +74,7 @@ customise_profile_layout = [
         [sg.Button("log in here", s=main_button_size, k="-LOGIN-FROM-CUSTOMISE-")],
     ], border_width=False)],
     [sg.Text("")],
-    [sg.Push(), sg.Text("Customise Profile", font=("Default font", title_size)), sg.Push()],
+    [sg.Push(), sg.Text("Customise Profile", font=(main_font, title_size)), sg.Push()],
     [sg.Text("")],
     [sg.Push(), sg.Frame("", [
         [sg.Text("Profile Preview:")],
@@ -90,7 +93,7 @@ customise_profile_layout = [
         [sg.Multiline(default_text="Start typing...",k="-CUSTOMISE-BIO-", s=textbox_size, background_color="#ffffff")],
         [sg.Button("save", k="-SAVE-")]
     ], s=dual_frame_size, border_width=False), sg.Push()],
-    [sg.Push(), sg.Button("Confirm", font=("Default font", subtitle_size), k="-CONFIRM-"), sg.Push()]
+    [sg.Push(), sg.Button("Confirm", font=(main_font, subtitle_size), k="-CONFIRM-"), sg.Push()]
 ]
 
 
@@ -102,7 +105,7 @@ login_layout = [
         [sg.Push(), sg.Text("Don't have an account?"), sg.Push()],
         [sg.Button("sign up here", s=main_button_size, k ="-SIGNUP-FROM-LOGIN-")]
     ], border_width=False)],
-    [sg.Push(), sg.Text("Log In", font=("Default font", title_size)), sg.Push()],
+    [sg.Push(), sg.Text("Log In", font=(main_font, title_size)), sg.Push()],
     [sg.Text("")],
     [sg.Push(),
      sg.Frame("", [
@@ -114,9 +117,9 @@ login_layout = [
          sg.Button("", image_filename="media\\eye_open.png", image_subsample=icon_size, metadata=initial_metadata, k="-VIEW-LOGIN-PASSWORD-")],
         [sg.Button("forgot password", k="-RECOVERY-FROM-LOGIN-")],
         [sg.Text(k="-LOGIN-OUTPUT-")],
-    ], border_width=False),
+    ], s=single_frame_size, border_width=False),
      sg.Push()],
-    [sg.Push(), sg.Button("log in", font=("Default font", subtitle_size), k="-LOGIN-"), sg.Push()],
+    [sg.Push(), sg.Button("log in", font=(main_font, subtitle_size), k="-LOGIN-"), sg.Push()],
     [sg.Text("")]
 ]
 
@@ -129,7 +132,7 @@ account_recovery_layout = [
     [sg.Push(), sg.Button("back to log in", s=main_button_size, k="-LOGIN-FROM-RECOVERY-")],
     [sg.Text("")],
     [sg.Push(), sg.Frame("", [
-        [sg.Push(), sg.Text("Account Recovery", font=("Default font", title_size)), sg.Push()],
+        [sg.Push(), sg.Text("Account Recovery", font=(main_font, title_size)), sg.Push()],
         [sg.Text("")],
         [sg.Push(),
          sg.Frame("", [
@@ -139,8 +142,8 @@ account_recovery_layout = [
          ], border_width=False),
          sg.Push()],
         [sg.Text("")],
-        [sg.Push(), sg.Button("Send email", font=("Default font", subtitle_size), k="-SEND-EMAIL-"), sg.Push()],
-    ], border_width=False), sg.Push()],
+        [sg.Push(), sg.Button("Send email", font=(main_font, subtitle_size), k="-SEND-EMAIL-"), sg.Push()],
+    ], s=single_frame_size, border_width=False), sg.Push()],
     [sg.VPush()], [sg.VPush()]
 ]
 
@@ -170,8 +173,8 @@ friends_layout = [
     [sg.Frame("", [ #todo remove border
                 [sg.VPush()], [
                 sg.Column([[sg.Image("media\\no_pfp.png", enable_events=True, k=f"-PFP{i}-")]]),
-                sg.Column([[sg.Button(friends[i][0], font=("Default font", 15), border_width=0, k=f"-FRIEND{i}-")],
-                           [sg.Button(friends[i][1], font=("Default font", 12),
+                sg.Column([[sg.Button(friends[i][0], font=(main_font, 15), border_width=0, k=f"-FRIEND{i}-")],
+                           [sg.Button(friends[i][1], font=(main_font, 12),
                                       border_width=1, k=f"-LASTMESSAGE{i}-")]])],
                 [sg.VPush()]], s=(350,100))
      ] for i in range(len(friends))
@@ -179,13 +182,13 @@ friends_layout = [
 
 
 chatroom_layout = [
-    [sg.Text("Open chat rooms", font= ("Default font", subtitle_size))],
+    [sg.Text("Open chat rooms", font= (main_font, subtitle_size))],
     (
         [sg.Frame("", [ #todo remove border
             [sg.VPush()],
-            [sg.Button(f"Room Name {i}", font=("Default font", 12), border_width=0, k=f"-ROOM{i}-")],
-            [sg.Button(f"Host: [host username]", font=("Default font", 10), border_width=0, k=f"-HOST{i}-")],
-            [sg.Button(f"Members: 0", font=("Default font", 15), border_width=0, k=f"-MEMBERS{i}-")],
+            [sg.Button(f"Room Name {i}", font=(main_font, 12), border_width=0, k=f"-ROOM{i}-")],
+            [sg.Button(f"Host: [host username]", font=(main_font, 10), border_width=0, k=f"-HOST{i}-")],
+            [sg.Button(f"Members: 0", font=(main_font, 15), border_width=0, k=f"-MEMBERS{i}-")],
             [sg.VPush()]
         ], border_width=1)]
         for i in range(1,4)
@@ -198,16 +201,16 @@ home_layout = [
         sg.Push(),
         # column 1 - Friends List
         sg.Frame("", [ #todo remove border
-            [sg.Text("Friends List:", font= ("Default font", title_size))],
+            [sg.Text("Friends List:", font= (main_font, title_size))],
             [sg.Column(friends_layout, scrollable=True)]
         ], border_width=1),
         # column 2 - Chat Rooms
         sg.Frame("", [ #todo remove border
-            [sg.Text("Open chat rooms", font= ("Default font", title_size))],
+            [sg.Text("Open chat rooms", font= (main_font, title_size))],
             [sg.Text("No open rooms! Click below to open a new room")],
             [sg.Column([#chatrooms_layout goes here
                         ])],
-            [sg.Button("Create new room", font=("Default font", main_button_size), k="-NEW-ROOM-")]
+            [sg.Button("Create new room", font=(main_font, main_button_size), k="-NEW-ROOM-")]
         ], border_width=1),
         sg.Push()
     ],
@@ -219,20 +222,30 @@ home_layout = [
 # todo wip
 # todo back button
 
-messagingroom_layout = [[sg.VPush()],
-              [sg.Text("NOT CONNECTED")],
-              #[sg.Text("Server address:"), sg.Text(server_ip)],
-              [sg.Text(s=(40, 1), k="-OUTPUT1-")],
-              [sg.Text(s=(40, 1), k="-OUTPUT2-")],
-              [sg.Text(s=(40, 1), k="-OUTPUT3-")],
-              [sg.Text(s=(40, 1), k="-OUTPUT4-")],
-              [sg.Text(s=(40, 1), k="-OUTPUT5-")],
-              [
-                  sg.Push(), sg.Text("Enter your name:", s=(15, 1), k="-PROMPT-"),
-                  sg.Input(s=(15, 1), k="-MESSAGE-", do_not_clear=False),
-                  sg.Button("send", bind_return_key=True, k="-SEND-MESSAGE-"), sg.Push()
-              ],
-              [sg.VPush()]]
+messagingroom_layout = [
+    [sg.VPush()],
+    [sg.Push(), sg.Frame("", [
+        [
+            sg.Text("Room name:", font=(main_font, subtitle_size)),
+            sg.Text(k="-CURRENT-ROOM-NAME-", font=(main_font, subtitle_size)),
+            sg.Push(),
+            sg.Text("Members:", font=(main_font, subtitle_size)),
+            sg.Text(k="-MEMBERS-", font=(main_font, subtitle_size))
+        ],
+        #[sg.Text("Server address:"), sg.Text(server_ip)],
+        [sg.Text(s=(40, 1), k="-OUTPUT1-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT2-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT3-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT4-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT5-")],
+        [
+            sg.Push(), sg.Text("Enter your name:", s=(15, 1), k="-PROMPT-"),
+            sg.Input(s=(15, 1), k="-MESSAGE-", do_not_clear=False),
+            sg.Button("send", bind_return_key=True, k="-SEND-MESSAGE-"), sg.Push()
+        ],
+    ], s=single_frame_size, border_width=False), sg.Push()],
+    [sg.VPush()]
+]
 
 
 
@@ -252,15 +265,18 @@ pages = {
 page_tabs = [[sg.Tab("", page.get_layout(), visible=False, k=page.get_name()) for page in pages.values()]]
 
 main_layout = [
-    [sg.Text("")],
-    [sg.Text("APP NAME", font=("Default font", app_name_size))],
+    [sg.Push(), sg.Frame("", [
+[sg.Text("")],
+    [sg.Text("APP NAME", font=(main_font, app_name_size))],
+    [sg.Text("NOT LOGGED IN", k="-LOGGED-IN?-"), sg.Push(), sg.Text("NOT CONNECTED", k="-CONNECTED?-")],
     [sg.Text("")],
     [sg.Push(),
     sg.TabGroup(
         page_tabs,
         selected_background_color = background_colour,
         background_color = background_colour,
-        border_width=0,
-        tab_border_width=0
+        border_width=False,
+        tab_border_width=False
     ), sg.Push()],
+    ], border_width=False, s=main_frame_size), sg.Push()]
 ]
