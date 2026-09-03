@@ -11,3 +11,5 @@ grannyhost = "192.168.1.138"
 my_port = 13108
 
 GUI_main(schoolhost, my_port)
+
+#todo: working on disconnecting from chat room & being able to reconnect

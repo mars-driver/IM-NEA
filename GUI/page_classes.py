@@ -1,6 +1,6 @@
 # ACCESSES: MODULES
 
-from modules import log_in, sign_up
+from modules import log_in, sign_up, client
 from threading import Thread
 from PIL import Image
 
@@ -35,12 +35,13 @@ class Page:
 
 
     # METHODS
-    def run_events(self, user, pages, window_closed):
+    def run_events(self, constants):
         print("Error: No events for superclass Page")
 
 class SignUp(Page):
-    def run_events(self, user, pages, window_closed):
-        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+    def run_events(self, constants):
+        user, client_object, pages, window_closed = constants.user, constants.client_object, constants.pages, constants.window_closed
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = self.get_window().read()
             if window_closed(event):
@@ -66,8 +67,10 @@ class SignUp(Page):
 
 
 class Customise(Page):
-    def run_events(self, user, pages, window_closed):
-        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+    def run_events(self, constants):
+        user, client_object, pages, window_closed = constants.user, constants.client_object, constants.pages, constants.window_closed
+        pages = constants.pages
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         username = user.get_username()
         self.get_window()["-CUSTOMISE-USERNAME-"].update(username)
         while True:
@@ -96,8 +99,9 @@ class Customise(Page):
 
 
 class LogIn(Page):
-    def run_events(self, user, pages, window_closed):
-        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+    def run_events(self, constants):
+        user, client_object, pages, window_closed = constants.user, constants.client_object, constants.pages, constants.window_closed
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = self.get_window().read()
             if window_closed(event):
@@ -121,8 +125,9 @@ class LogIn(Page):
                 self.show_password(event)
 
 class Recovery(Page):
-    def run_events(self, user, pages, window_closed):
-        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+    def run_events(self, constants):
+        user, client_object, pages, window_closed = constants.user, constants.client_object, constants.pages, constants.window_closed
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = self.get_window().read()
             if window_closed(event):
@@ -134,18 +139,9 @@ class Recovery(Page):
                 pass
 
 class Connect(Page):
-    def __init__(self, new_name, new_layout):
-        super().__init__(new_name, new_layout)
-        self.__client_object = None
-
-    # GETTERS & SETTERS
-    def get_client(self):
-        return self.__client_object
-    def set_client(self, new_client):
-        self.__client_object = new_client
-
-    def run_events(self, user, pages, window_closed):
-        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+    def run_events(self, constants):
+        user, client_object, pages, window_closed = constants.user, constants.client_object, constants.pages, constants.window_closed
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = self.get_window().read()
             if window_closed(event):
@@ -153,14 +149,17 @@ class Connect(Page):
             elif event == "-CONNECT-":
                 name = user.get_username()
                 print("name:", name)
-                self.get_client().connect(name)
+                client_object = client.initialise_client(constants.server_ip, constants.port, self.get_window())
+                client_object.connect(name)
                 self.get_window()["-CONNECTED?-"].update("CONNECTED")
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-PAGE-"])
+                return_values["-CLIENT-"] = client_object
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-MESSAGING-PAGE-"])
                 return return_values
 
-class Home(Page):
-    def run_events(self, user, pages, window_closed):
-        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+class Home(Page): #not in use
+    def run_events(self, constants):
+        user, client_object, pages, window_closed = constants.user, constants.client_object, constants.pages, constants.window_closed
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = self.get_window().read()
             if window_closed(event):
@@ -182,10 +181,10 @@ class Messaging(Page):
         self.__client_object = new_client
 
     # METHODS
-    def run_events(self, user, pages, window_closed):
-        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user}
+    def run_events(self, constants):
+        user, client_object, pages, window_closed = constants.user, constants.client_object, constants.pages, constants.window_closed
+        return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
 
-        client_object = self.get_client()
         messages = []
         Thread(target=client_object.receive).start()
         self.get_window()["-PROMPT-"].update("Type message here:")
@@ -204,6 +203,11 @@ class Messaging(Page):
                 message = values["-RECEIVED-"]
                 messages.append(("", message))
                 self.update_messages(messages)
+            elif event == "-LEAVE-ROOM-":
+                client_object.socket.close()
+                self.get_window()["-CONNECTED?-"].update("NOT CONNECTED")
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-CONNECT-PAGE-"])
+                return return_values
 
     def update_messages(self, messages):
         num_rows = 5

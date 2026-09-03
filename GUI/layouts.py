@@ -226,6 +226,7 @@ messagingroom_layout = [
     [sg.VPush()],
     [sg.Push(), sg.Frame("", [
         [
+            sg.Button("", image_filename="media\\back.png", image_subsample=icon_size, k="-LEAVE-ROOM-"),
             sg.Text("Room name:", font=(main_font, subtitle_size)),
             sg.Text(k="-CURRENT-ROOM-NAME-", font=(main_font, subtitle_size)),
             sg.Push(),
