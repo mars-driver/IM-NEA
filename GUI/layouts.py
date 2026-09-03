@@ -14,7 +14,7 @@ input_output_size = 28
 main_button_size = 18
 single_frame_size = (500, 250)
 dual_frame_size = (250,250)
-main_frame_size = (1000,1000)
+main_frame_size = (700,700)
 dual_frame_button_size = (27,1)
 textbox_size = (30,7)
 initial_metadata = 0
@@ -113,7 +113,7 @@ login_layout = [
         [sg.Input(expand_x=True, k="-LOGIN-USERNAME-", default_text="admin"),],
         [sg.Text("")],
         [sg.Text("enter password:")],
-        [sg.Input(password_char="*", expand_x=True, k="-LOGIN-PASSWORD-"),
+        [sg.Input(password_char="*", expand_x=True, k="-LOGIN-PASSWORD-", default_text="Tp1tmlltwfmiatsnwy!mb"),
          sg.Button("", image_filename="media\\eye_open.png", image_subsample=icon_size, metadata=initial_metadata, k="-VIEW-LOGIN-PASSWORD-")],
         [sg.Button("forgot password", k="-RECOVERY-FROM-LOGIN-")],
         [sg.Text(k="-LOGIN-OUTPUT-")],
@@ -225,14 +225,8 @@ home_layout = [
 messagingroom_layout = [
     [sg.VPush()],
     [sg.Push(), sg.Frame("", [
-        [
-            sg.Text("Room name:", font=(main_font, subtitle_size)),
-            sg.Text(k="-CURRENT-ROOM-NAME-", font=(main_font, subtitle_size)),
-            sg.Push(),
-            sg.Text("Members:", font=(main_font, subtitle_size)),
-            sg.Text(k="-MEMBERS-", font=(main_font, subtitle_size))
-        ],
         #[sg.Text("Server address:"), sg.Text(server_ip)],
+        [sg.Text("Welcome to the chat room!", font=(main_font, subtitle_size))],
         [sg.Text(s=(40, 1), k="-OUTPUT1-")],
         [sg.Text(s=(40, 1), k="-OUTPUT2-")],
         [sg.Text(s=(40, 1), k="-OUTPUT3-")],
@@ -243,7 +237,7 @@ messagingroom_layout = [
             sg.Input(s=(15, 1), k="-MESSAGE-", do_not_clear=False),
             sg.Button("send", bind_return_key=True, k="-SEND-MESSAGE-"), sg.Push()
         ],
-    ], s=single_frame_size, border_width=False), sg.Push()],
+    ], s=single_frame_size, border_width=1), sg.Push()],
     [sg.VPush()]
 ]
 

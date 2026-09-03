@@ -155,7 +155,7 @@ class Connect(Page):
                 print("name:", name)
                 self.get_client().connect(name)
                 self.get_window()["-CONNECTED?-"].update("CONNECTED")
-                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-HOME-PAGE-"])
+                return_values["-NEW-PAGE-"] = change_page(self.get_window(), self, pages["-MESSAGING-PAGE-"])
                 return return_values
 
 class Home(Page):
