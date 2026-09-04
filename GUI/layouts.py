@@ -14,7 +14,7 @@ input_output_size = 28
 main_button_size = 18
 single_frame_size = (500, 250)
 dual_frame_size = (250,250)
-main_frame_size = (1000,1000)
+main_frame_size = (700,700)
 dual_frame_button_size = (27,1)
 textbox_size = (30,7)
 initial_metadata = 0
@@ -27,8 +27,8 @@ background_colour = "grey94"
 
 connection_layout = [
     [sg.VPush()],
-    [sg.Push(), sg.Text("NOT CONNECTED", font=(main_font, title_size)), sg.Push()],
-    [sg.Push(), sg.Button("Connect", k="-CONNECT-"), sg.Push()],
+    [sg.Push(), sg.Text("Click below to join the chat room!", font=(main_font, subtitle_size)), sg.Push()],
+    [sg.Push(), sg.Button("JOIN", s=main_button_size, k="-CONNECT-"), sg.Push()],
     [sg.VPush()]
 ]
 
@@ -220,12 +220,29 @@ home_layout = [
 
 # Messaging
 # todo wip
-# todo back button
 
 messagingroom_layout = [
     [sg.VPush()],
     [sg.Push(), sg.Frame("", [
         [
+            sg.Button("", image_filename="media\\back.png", image_subsample=icon_size, k="-LEAVE-ROOM-"),
+            sg.Text("Welcome to the chat room!", font=(main_font, subtitle_size))],
+        [sg.Text(s=(40, 1), k="-OUTPUT1-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT2-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT3-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT4-")],
+        [sg.Text(s=(40, 1), k="-OUTPUT5-")],
+        [
+            sg.Text("Enter your name:", s=(15, 1), k="-PROMPT-"),
+            sg.Input(s=(15, 1), k="-MESSAGE-", expand_x=True, do_not_clear=False),
+            sg.Button("send", bind_return_key=True, k="-SEND-MESSAGE-"), sg.Push()
+        ],
+    ], s=single_frame_size, border_width=0), sg.Push()],
+    [sg.VPush()]
+]
+
+"""
+[
             sg.Button("", image_filename="media\\back.png", image_subsample=icon_size, k="-LEAVE-ROOM-"),
             sg.Text("Room name:", font=(main_font, subtitle_size)),
             sg.Text(k="-CURRENT-ROOM-NAME-", font=(main_font, subtitle_size)),
@@ -233,20 +250,7 @@ messagingroom_layout = [
             sg.Text("Members:", font=(main_font, subtitle_size)),
             sg.Text(k="-MEMBERS-", font=(main_font, subtitle_size))
         ],
-        #[sg.Text("Server address:"), sg.Text(server_ip)],
-        [sg.Text(s=(40, 1), k="-OUTPUT1-")],
-        [sg.Text(s=(40, 1), k="-OUTPUT2-")],
-        [sg.Text(s=(40, 1), k="-OUTPUT3-")],
-        [sg.Text(s=(40, 1), k="-OUTPUT4-")],
-        [sg.Text(s=(40, 1), k="-OUTPUT5-")],
-        [
-            sg.Push(), sg.Text("Enter your name:", s=(15, 1), k="-PROMPT-"),
-            sg.Input(s=(15, 1), k="-MESSAGE-", do_not_clear=False),
-            sg.Button("send", bind_return_key=True, k="-SEND-MESSAGE-"), sg.Push()
-        ],
-    ], s=single_frame_size, border_width=False), sg.Push()],
-    [sg.VPush()]
-]
+"""
 
 
 
