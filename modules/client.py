@@ -10,14 +10,18 @@ class ChatClient:
 
     def send(self, message):
         message_out = f"{self.name}: {message}"
-        self.socket.send(message_out.encode("utf8"))
+        self.socket.send(message_out.encode())
 
     def connect(self, name):
         self.socket.connect((self.host, self.port))
         self.name = name
-        self.socket.send(name.encode("utf8"))
+        self.socket.send(name.encode())
 
     def receive(self):
         while True:
-            message = self.socket.recv(1024).decode("utf8")
+            message = self.socket.recv(1024).decode()
             self.window.write_event_value("-RECEIVED-", message)
+
+def initialise_client(server_ip, port, window):
+    client_object = ChatClient(server_ip, port, window)
+    return client_object
