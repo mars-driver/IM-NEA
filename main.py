@@ -12,20 +12,4 @@ my_port = 13108
 
 GUI_main(schoolhost, my_port)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #todo: working on disconnecting from chat room & being able to reconnect (i think i got it?)
