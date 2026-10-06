@@ -4,7 +4,7 @@ from GUI.gui import GUI_main
 
 # CONSTANTS
 homehost = "192.168.1.122"
-schoolhost = "10.56.81.120"
+schoolhost = "10.56.80.90"
 localhost = "127.0.0.1"
 dadhost = "127.0.1.1"
 grannyhost = "192.168.1.138"

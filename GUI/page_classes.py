@@ -203,7 +203,7 @@ def show_password(event, window):
     window[event].metadata = switch
 
 def update_messages(messages, window):
-    print("messages:", messages)
+    #print("messages:", messages)
     num_rows = 5
     visible_messages = messages[::-1]
     if len(messages) < num_rows:
