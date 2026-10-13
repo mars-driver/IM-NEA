@@ -17,14 +17,24 @@ def GUI_main(server_ip, port):
     current_user = User()
     client_object = None
 
-    main_constants = Constants(server_ip, port, PAGES, WINDOW, window_closed)
-    main_variables = Variables(current_user, client_object)
+    main_constants = {
+        "server_ip": server_ip, 
+        "port": port, 
+        "pages": PAGES, 
+        "window": WINDOW, 
+        "window_closed": window_closed
+    }
+    
+    main_variables = {
+        "current_user": current_user, 
+        "client_object": client_object
+    }
 
     WINDOW["-SIGNUP-PAGE-"].update(visible=True)
     current_page = PAGES["-SIGNUP-PAGE-"]
 
     while True:
-        return_values = current_page.run_events(main_variables, main_constants)
+        return_values = current_page.run_events(main_constants, main_variables)
         if return_values is None:
             break
         else:
