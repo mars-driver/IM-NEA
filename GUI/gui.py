@@ -8,17 +8,20 @@ from modules.classes import User, Constants, Variables
 
 def GUI_main(server_ip, port):
 
-    layout = layouts.main_layout
-    window = sg.Window("sign up / log in", layout, resizable=True, finalize=True)
+    # CONSTANTS
+    LAYOUT = layouts.main_layout
+    WINDOW = sg.Window("sign up / log in", LAYOUT, resizable=True, finalize=True)
+    PAGES = layouts.pages
+
+    # VARIABLES
     current_user = User()
     client_object = None
-    pages = layouts.pages
 
+    main_constants = Constants(server_ip, port, PAGES, WINDOW, window_closed)
     main_variables = Variables(current_user, client_object)
-    main_constants = Constants(server_ip, port, pages, window, window_closed)
 
-    window["-SIGNUP-PAGE-"].update(visible=True)
-    current_page = pages["-SIGNUP-PAGE-"]
+    WINDOW["-SIGNUP-PAGE-"].update(visible=True)
+    current_page = PAGES["-SIGNUP-PAGE-"]
 
     while True:
         return_values = current_page.run_events(main_variables, main_constants)
