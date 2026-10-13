@@ -2,7 +2,7 @@
 
 import PySimpleGUI as sg # library for GUI
 from GUI import layouts
-from modules.classes import User, Constants, Variables
+from modules.classes import User
 
 # GUI
 
