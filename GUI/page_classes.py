@@ -4,6 +4,9 @@ from modules import log_in, sign_up, client
 from threading import Thread
 from PIL import Image
 
+# CONSTANTS
+IMAGE_SIZE = (50,50)
+
 
 class Page:
     def __init__(self, new_name, new_layout):
@@ -78,7 +81,7 @@ class Customise(Page):
                 return return_values
             elif event == "-CUSTOMISE-PFP-":
                 new_pfp_raw = values["-CUSTOMISE-PFP-"]
-                new_pfp_image = Image.open(new_pfp_raw).resize((50,50))
+                new_pfp_image = Image.open(new_pfp_raw).resize(IMAGE_SIZE)
                 new_pfp_image.save("media\\pfp.png", format="png")
                 new_pfp_image.close()
                 new_pfp = "media\\pfp.png"
