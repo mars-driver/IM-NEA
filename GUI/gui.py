@@ -12,6 +12,7 @@ def GUI_main(server_ip, port):
     LAYOUT = layouts.main_layout
     WINDOW = sg.Window("sign up / log in", LAYOUT, resizable=True, finalize=True)
     PAGES = layouts.pages
+    WINDOW_CLOSED = sg.WIN_CLOSED
 
     # VARIABLES
     current_user = User()
@@ -22,7 +23,7 @@ def GUI_main(server_ip, port):
         "port": port, 
         "pages": PAGES, 
         "window": WINDOW, 
-        "window_closed": window_closed
+        "window_closed": WINDOW_CLOSED
     }
     
     main_variables = {
@@ -43,6 +44,3 @@ def GUI_main(server_ip, port):
             client_object = return_values.get("-CLIENT-")
             main_variables = Variables(current_user, client_object)
     window.close()
-
-def window_closed(event):
-    return event == sg.WIN_CLOSED
