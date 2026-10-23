@@ -30,8 +30,8 @@ class Page:
 
 class SignUp(Page):
     def run_events(self, constants, variables):
-        pages, window, window_closed = constants["pages"], constants["window"], constants["window_closed"]
-        user, client_object = variables["user"], variables["client_object"]
+        pages, window, window_closed = constants.values()
+        user, client_object = variables.values()
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
@@ -59,8 +59,8 @@ class SignUp(Page):
 
 class Customise(Page):
     def run_events(self, constants, variables):
-        pages, window, window_closed = constants["pages"], constants["window"], constants["window_closed"]
-        user, client_object = variables["user"], variables["client_object"]
+        pages, window, window_closed = constants.values()
+        user, client_object = variables.values()
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         username = user.get_username()
         window["-CUSTOMISE-USERNAME-"].update(username)
@@ -91,8 +91,8 @@ class Customise(Page):
 
 class LogIn(Page):
     def run_events(self, constants, variables):
-        pages, window, window_closed = constants["pages"], constants["window"], constants["window_closed"]
-        user, client_object = variables["user"], variables["client_object"]
+        pages, window, window_closed = constants.values()
+        user, client_object = variables.values()
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
@@ -118,8 +118,8 @@ class LogIn(Page):
 
 class Recovery(Page):
     def run_events(self, constants, variables):
-        pages, window, window_closed = constants["pages"], constants["window"], constants["window_closed"]
-        user, client_object = variables["user"], variables["client_object"]
+        pages, window, window_closed = constants.values()
+        user, client_object = variables.values()
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
@@ -133,8 +133,8 @@ class Recovery(Page):
 
 class Connect(Page):
     def run_events(self, constants, variables):
-        pages, window, window_closed = constants["pages"], constants["window"], constants["window_closed"]
-        user, client_object = variables["user"], variables["client_object"]
+        pages, window, window_closed = constants.values()
+        user, client_object = variables.values()
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
@@ -152,8 +152,8 @@ class Connect(Page):
 
 class Home(Page): #not in use
     def run_events(self, constants, variables):
-        pages, window, window_closed = constants["pages"], constants["window"], constants["window_closed"]
-        user, client_object = variables["user"], variables["client_object"]
+        pages, window, window_closed = constants.values()
+        user, client_object = variables.values()
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
@@ -166,8 +166,8 @@ class Home(Page): #not in use
 
 class Messaging(Page):
     def run_events(self, constants, variables):
-        pages, window, window_closed = constants["pages"], constants["window"], constants["window_closed"]
-        user, client_object = variables["user"], variables["client_object"]
+        pages, window, window_closed = constants.values()
+        user, client_object = variables.values()
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
 
         messages = []
