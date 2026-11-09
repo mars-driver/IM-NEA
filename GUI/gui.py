@@ -15,7 +15,7 @@ def GUI_main(server_ip, port):
     pages = layouts.pages
 
     main_variables = Variables(current_user, client_object)
-    main_constants = Constants(server_ip, port, pages, window, window_closed)
+    main_constants = Constants(server_ip, port, pages, window, sg.WIN_CLOSED)
 
     window["-SIGNUP-PAGE-"].update(visible=True)
     current_page = pages["-SIGNUP-PAGE-"]
@@ -30,6 +30,3 @@ def GUI_main(server_ip, port):
             client_object = return_values.get("-CLIENT-")
             main_variables = Variables(current_user, client_object)
     window.close()
-
-def window_closed(event):
-    return event == sg.WIN_CLOSED

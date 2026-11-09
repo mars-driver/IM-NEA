@@ -32,7 +32,7 @@ class SignUp(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
-            if window_closed(event):
+            if event == window_closed:
                 break
             elif event == "-SIGN-UP-":
                 result = sign_up.sign_up((
@@ -63,7 +63,7 @@ class Customise(Page):
         window["-CUSTOMISE-USERNAME-"].update(username)
         while True:
             event, values = window.read()
-            if window_closed(event):
+            if event == window_closed:
                 break
             elif event == "-SAVE-":
                 new_bio = values["-CUSTOMISE-BIO-"]
@@ -93,7 +93,7 @@ class LogIn(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
-            if window_closed(event):
+            if event == window_closed:
                 break
             elif event == "-LOGIN-":
                 result = log_in.log_in((values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]))
@@ -120,7 +120,7 @@ class Recovery(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
-            if window_closed(event):
+            if event == window_closed:
                 break
             if event == "-LOGIN-FROM-RECOVERY-":
                 return_values["-NEW-PAGE-"] = self.change_page(window, pages["-LOGIN-PAGE-"])
@@ -135,7 +135,7 @@ class Connect(Page):
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
-            if window_closed(event):
+            if event == window_closed:
                 break
             elif event == "-CONNECT-":
                 name = user.get_username()
@@ -154,7 +154,7 @@ class Home(Page): #not in use
         return_values = {"-OLD-PAGE-": self, "-CURRENT-USER-": user, "-CLIENT-": client_object}
         while True:
             event, values = window.read()
-            if window_closed(event):
+            if event == window_closed:
                 break
             if event == "-NEW-ROOM-":
                 return_values["-NEW-PAGE-"] = self.change_page(window, pages["-MESSAGING-PAGE-"])
@@ -174,7 +174,7 @@ class Messaging(Page):
 
         while True:
             event, values = window.read()
-            if window_closed(event):
+            if event == window_closed:
                 client_object.socket.close()
                 break
             elif event == "-SEND-MESSAGE-":

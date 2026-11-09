@@ -8,6 +8,7 @@ schoolhost = "10.56.84.65"
 localhost = "127.0.0.1"
 dadhost = "127.0.1.1"
 grannyhost = "192.168.1.138"
+MARSHOST = "10.77.32.14"
 my_port = 13108
 
 GUI_main(schoolhost, my_port)
