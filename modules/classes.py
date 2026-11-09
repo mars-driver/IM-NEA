@@ -30,3 +30,16 @@ class User:
         self.__pfp = new_pfp
     def set_bio(self, new_bio):
         self.__bio = new_bio
+
+class Constants:
+    def __init__(self, new_server_ip, new_port, new_pages, new_window, new_window_closed):
+        self.server_ip = new_server_ip
+        self.port = new_port
+        self.pages = new_pages
+        self.window = new_window
+        self.window_closed = new_window_closed
+
+class Variables:
+    def __init__(self, new_user, new_client_object):
+        self.user = new_user
+        self.client_object = new_client_object

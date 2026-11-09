@@ -2,17 +2,17 @@
 
 import PySimpleGUI as sg # library for GUI
 from GUI import layouts
-from modules.classes import User
+from modules.classes import User, Variables, Constants
 
 # GUI
 
 def GUI_main(server_ip, port):
 
     # CONSTANTS
-    LAYOUT = layouts.main_layout
-    WINDOW = sg.Window("sign up / log in", LAYOUT, resizable=True, finalize=True)
-    PAGES = layouts.pages
-    WINDOW_CLOSED = sg.WIN_CLOSED
+    layout = layouts.main_layout
+    window = sg.Window("sign up / log in", layout, resizable=True, finalize=True)
+    pages = layouts.pages
+    window_closed = sg.WIN_CLOSED
 
     # VARIABLES
     current_user = User()
@@ -21,9 +21,9 @@ def GUI_main(server_ip, port):
     main_constants = {
         "server_ip": server_ip, 
         "port": port, 
-        "pages": PAGES, 
-        "window": WINDOW, 
-        "window_closed": WINDOW_CLOSED
+        "pages": pages,
+        "window": window,
+        "window_closed": window_closed
     }
     
     main_variables = {
@@ -31,8 +31,11 @@ def GUI_main(server_ip, port):
         "client_object": client_object
     }
 
-    WINDOW["-SIGNUP-PAGE-"].update(visible=True)
-    current_page = PAGES["-SIGNUP-PAGE-"]
+    main_variables = Variables(current_user, client_object)
+    main_constants = Constants(server_ip, port, pages, window, window_closed)
+
+    window["-SIGNUP-PAGE-"].update(visible=True)
+    current_page = pages["-SIGNUP-PAGE-"]
 
     while True:
         return_values = current_page.run_events(main_constants, main_variables)
