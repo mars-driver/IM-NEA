@@ -1,49 +1,60 @@
-# ACCESSES: PSG, LAYOUTS, USER(?)
-
 import PySimpleGUI as sg # library for GUI
-from GUI import layouts
-from modules.classes import User, Variables, Constants
+from GUI import layouts, page_classes
 
-# GUI
+# CONSTANTS
 
-def GUI_main(server_ip, port):
+PAGES = {
+    "-SIGNUP-PAGE-": page_classes.SignUp("-SIGNUP-PAGE-", layouts.SIGNUP_LAYOUT, sg.WIN_CLOSED),
+    "-LOGIN-PAGE-": page_classes.LogIn("-LOGIN-PAGE-", layouts.LOGIN_LAYOUT, sg.WIN_CLOSED),
+    "-CUSTOMISE-PAGE-": page_classes.Customise("-CUSTOMISE-PAGE-", layouts.CUSTOMISE_PROFILE_LAYOUT, sg.WIN_CLOSED),
+    "-MESSAGING-PAGE-": page_classes.Messaging("-MESSAGING-PAGE-", layouts.MESSAGING_LAYOUT, sg.WIN_CLOSED)
+}
 
-    # CONSTANTS
-    layout = layouts.main_layout
-    window = sg.Window("sign up / log in", layout, resizable=True, finalize=True)
-    pages = layouts.pages
-    window_closed = sg.WIN_CLOSED
+PAGE_TABS = [[sg.Tab("", page.get_layout(), visible=False, k=page.get_name()) for page in PAGES.values()]]
 
-    # VARIABLES
+LAYOUT = layouts.create_main_layout(PAGE_TABS)
+
+WINDOW = sg.Window("sign up / log in", LAYOUT, resizable=True)
+
+for page in PAGES.values():
+    page.set_window(WINDOW)
+
+# MAIN PROGRAM
+
+def GUI_main(accounts, server_ip, port): # need server_ip and port
+
+    PAGES["-MESSAGING-PAGE-"].set_server_ip(server_ip)
+    PAGES["-MESSAGING-PAGE-"].set_port(port)
+
+    current_page = PAGES["-SIGNUP-PAGE-"]
     current_user = User()
-    client_object = None
-
-    main_constants = {
-        "server_ip": server_ip, 
-        "port": port, 
-        "pages": pages,
-        "window": window,
-        "window_closed": window_closed
-    }
-    
-    main_variables = {
-        "current_user": current_user, 
-        "client_object": client_object
-    }
-
-    main_variables = Variables(current_user, client_object)
-    main_constants = Constants(server_ip, port, pages, window, window_closed)
-
-    window["-SIGNUP-PAGE-"].update(visible=True)
-    current_page = pages["-SIGNUP-PAGE-"]
 
     while True:
-        return_values = current_page.run_events(main_constants, main_variables)
-        if return_values is None:
+        try:
+            new_page_name, current_user = current_page.run_events(accounts, current_user)
+            current_page = PAGES[new_page_name]
+        except TypeError:
+            print("You closed the window.")
+            WINDOW.close()
             break
-        else:
-            current_page = return_values.get("-NEW-PAGE-")
-            current_user = return_values.get("-CURRENT-USER-")
-            client_object = return_values.get("-CLIENT-")
-            main_variables = Variables(current_user, client_object)
-    window.close()
+        except:
+            print("Error. Closing window.")
+            WINDOW.close()
+            break
+
+class User:
+    def __init__(self):
+        self.__username = None
+        self.__client_object = None
+
+    # getters
+    def get_username(self):
+        return self.__username
+    def get_client_object(self):
+        return self.__client_object
+
+    # setters
+    def set_username(self, new_username):
+        self.__username = new_username
+    def set_client_object(self, new_client_object):
+        self.__client_object = new_client_object

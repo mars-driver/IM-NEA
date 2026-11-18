@@ -21,7 +21,3 @@ class ChatClient:
         while True:
             message = self.socket.recv(1024).decode()
             self.window.write_event_value("-RECEIVED-", message)
-
-def initialise_client(server_ip, port, window):
-    client_object = ChatClient(server_ip, port, window)
-    return client_object
