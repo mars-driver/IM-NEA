@@ -12,7 +12,7 @@ class Page:
         self.__window = None
         self.__window_closed = new_windowclosed
 
-    # GETTERS AND SETTERS
+    # GETTERS & SETTERS
 
     def get_name(self):
         return self.__name
@@ -28,11 +28,14 @@ class Page:
     # METHODS
 
     def run_events(self, accounts, current_user):
+        """
+        generic run_events method - this will not do anything and only exists as a template
+        """
         pass
 
     def change_page(self, new_page_name):
         """
-        new method to change the current visible page
+        method to change the current visible page
         """
         window = self.get_window()
         window[new_page_name].update(visible=True)
@@ -41,6 +44,9 @@ class Page:
 
 class SignUp(Page):
     def run_events(self, accounts, current_user):
+        """
+        function to handle running the respective events for the Sign Up page
+        """
         window = self.get_window()
         window_closed = self.get_window_closed()
         while True:
@@ -55,10 +61,13 @@ class SignUp(Page):
                     current_user.set_username(values["-SIGNUP-USERNAME-"])
                     return self.change_page("-CUSTOMISE-PAGE-"), current_user
             elif event == "-LOGIN-FROM-SIGNUP-":
-                return self.change_page("-LOGIN-PAGE-"), current_user
+                return self.change_page("-LOGIN-PAGE-"), current_user  # returns new page and current user
 
 class LogIn(Page):
     def run_events(self, accounts, current_user):
+        """
+        function to handle running the respective events for the Log In page
+        """
         window = self.get_window()
         window_closed = self.get_window_closed()
         while True:
@@ -66,23 +75,24 @@ class LogIn(Page):
             if event == window_closed:
                 break
             elif event == "-LOGIN-":
-                username = values["-LOGIN-USERNAME-"]
-                password = values["-LOGIN-PASSWORD-"]
-                relevant_values = [username, password]
+                relevant_values = [values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]]
                 result = log_in.log_in(relevant_values, accounts)
                 window["-LOGIN-OUTPUT-"].update(result)
                 if result == "Login successful.":
-                    current_user.set_username(username)
+                    current_user.set_username(values["-LOGIN-USERNAME-"])
                     return self.change_page("-MESSAGING-PAGE-"), current_user
             elif event == "-SIGNUP-FROM-LOGIN-":
-                return self.change_page("-SIGNUP-PAGE-"), current_user # returns new page and current user
+                return self.change_page("-SIGNUP-PAGE-"), current_user # returns new page name and current user
 
 class Customise(Page):
     def run_events(self, accounts, current_user):
+        """
+        function to handle running the respective events for the Customise Profile page
+        """
         window = self.get_window()
         window_closed = self.get_window_closed()
         username = current_user.get_username()
-        window["-CUSTOMISE-USERNAME-"].update(username)
+        window["-CUSTOMISE-USERNAME-"].update(username) # updates the username
         while True:
             event, values = window.read()
             if event == window_closed:
@@ -104,8 +114,8 @@ class Customise(Page):
 
 class Messaging(Page):
     def __init__(self, new_name, new_layout, new_windowclosed):
-        # this page needs the server ip and port in order to connect to the socket
         super().__init__(new_name, new_layout, new_windowclosed)
+        # this page needs the server ip and port in order to connect to the socket
         self.__server_ip = None
         self.__port = None
 
@@ -118,12 +128,14 @@ class Messaging(Page):
     def set_port(self, new_port):
         self.__port = new_port
 
-
     def run_events(self, accounts, current_user):
+        """
+        procedure to handle running the respective events for the Messaging page
+        """
         window = self.get_window()
         window_closed = self.get_window_closed()
 
-        client_object = client.ChatClient(self.__server_ip, self.__port, window)
+        client_object = client.ChatClient(self.get_server_ip(), self.get_port(), window)
         current_user.set_client_object(client_object)
         name = current_user.get_username()
 
@@ -146,8 +158,10 @@ class Messaging(Page):
                 messages.append(("", message))
                 update_messages(messages, window)
 
-
 def update_messages(messages, window):
+    """
+    procedure to handle updating the display with the most recent messages
+    """
     num_rows = 5
     visible_messages = messages[::-1]
     if len(messages) < num_rows:

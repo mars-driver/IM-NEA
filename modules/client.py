@@ -9,15 +9,24 @@ class ChatClient:
         self.window = window
 
     def send(self, message):
+        """
+        sends the given message to the server
+        """
         message_out = f"{self.name}: {message}"
         self.socket.send(message_out.encode())
 
     def connect(self, name):
+        """
+        uses sockets to establish a connection
+        """
         self.socket.connect((self.host, self.port))
         self.name = name
         self.socket.send(name.encode())
 
     def receive(self):
+        """
+        receives new incoming messages from the server and displays them
+        """
         while True:
             message = self.socket.recv(1024).decode()
             self.window.write_event_value("-RECEIVED-", message)

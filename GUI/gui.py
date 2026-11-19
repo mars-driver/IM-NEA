@@ -22,6 +22,9 @@ for page in PAGES.values():
 # MAIN PROGRAM
 
 def GUI_main(accounts, server_ip, port): # need server_ip and port
+    """
+    main program
+    """
 
     PAGES["-MESSAGING-PAGE-"].set_server_ip(server_ip)
     PAGES["-MESSAGING-PAGE-"].set_port(port)
@@ -47,13 +50,11 @@ class User:
         self.__username = None
         self.__client_object = None
 
-    # getters
+    # GETTERS & SETTERS
     def get_username(self):
         return self.__username
     def get_client_object(self):
         return self.__client_object
-
-    # setters
     def set_username(self, new_username):
         self.__username = new_username
     def set_client_object(self, new_client_object):
