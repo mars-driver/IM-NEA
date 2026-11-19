@@ -1,5 +1,6 @@
 import PySimpleGUI as sg # library for GUI
 from GUI import layouts, page_classes
+from modules import client
 
 # CONSTANTS
 
@@ -26,11 +27,12 @@ def GUI_main(accounts, server_ip, port): # need server_ip and port
     main program
     """
 
-    PAGES["-MESSAGING-PAGE-"].set_server_ip(server_ip)
-    PAGES["-MESSAGING-PAGE-"].set_port(port)
-
     current_page = PAGES["-SIGNUP-PAGE-"]
     current_user = User()
+
+    client_object = client.ChatClient(server_ip, port, WINDOW)
+    client_object.connect()
+    current_user.set_client_object(client_object)
 
     while True:
         try:
@@ -56,5 +58,6 @@ class User:
         return self.__client_object
     def set_username(self, new_username):
         self.__username = new_username
+        self.__client_object.set_name(new_username)
     def set_client_object(self, new_client_object):
         self.__client_object = new_client_object

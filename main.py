@@ -2,7 +2,7 @@ from GUI import gui # my gui.py file
 
 # CONSTANTS
 HOMEHOST = "192.168.1.122"
-SCHOOLHOST = "10.56.84.65"
+SCHOOLHOST = "10.56.81.185"
 LOCALHOST = "127.0.0.1"
 GRANNYHOST = "192.168.1.138"
 MY_PORT = 13108
@@ -23,4 +23,4 @@ accounts = {
     "marsjdriver": Account("marsjdriver", "f611bf33a30e39a21d3cd46bfe1e0bbde2179769f9c79d97a776520b86553e0b", "eff83ac16979a3737bc1d0501a9b6a73", False) # password: Tp1tmlltwfmiatsnwy!mb
 }
 
-gui.GUI_main(accounts, LOCALHOST, MY_PORT)
+gui.GUI_main(accounts, HOMEHOST, MY_PORT)

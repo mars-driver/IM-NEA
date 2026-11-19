@@ -113,33 +113,13 @@ class Customise(Page):
                 window["-SHOW-PFP-"].update(new_pfp)
 
 class Messaging(Page):
-    def __init__(self, new_name, new_layout, new_windowclosed):
-        super().__init__(new_name, new_layout, new_windowclosed)
-        # this page needs the server ip and port in order to connect to the socket
-        self.__server_ip = None
-        self.__port = None
-
-    def get_server_ip(self):
-        return self.__server_ip
-    def get_port(self):
-        return self.__port
-    def set_server_ip(self, new_server_ip):
-        self.__server_ip = new_server_ip
-    def set_port(self, new_port):
-        self.__port = new_port
-
     def run_events(self, accounts, current_user):
         """
         procedure to handle running the respective events for the Messaging page
         """
         window = self.get_window()
         window_closed = self.get_window_closed()
-
-        client_object = client.ChatClient(self.get_server_ip(), self.get_port(), window)
-        current_user.set_client_object(client_object)
-        name = current_user.get_username()
-
-        client_object.connect(name)
+        client_object = current_user.get_client_object()
         messages = []
 
         Thread(target=client_object.receive, daemon=True).start()
@@ -148,14 +128,35 @@ class Messaging(Page):
             event, values = window.read()
             if event == window_closed:
                 break
+
             elif event == "-SEND-MESSAGE-":
                 message = values["-MESSAGE-"]
-                messages.append(("You:", message))
+                messages.append("You: " + message)
                 client_object.send(message)
                 update_messages(messages, window)
-            elif event == "-RECEIVED-":
-                message = values["-RECEIVED-"]
-                messages.append(("", message))
+
+            elif event[0] == "-RECEIVED-":
+                message_type = event[1]
+                message_dict = values[event]
+
+                if message_type == "-TEXT-": # A message sent from a user to a chat room
+                    sender = message_dict["sender"]
+                    content = message_dict["content"]
+                    message = f"{sender}: {content}"
+                    print("new message:", message)
+
+                elif message_type == "-JOIN-": # A message sent by the server when a user joins the chat room
+                    user = message_dict["user"]
+                    message = f"{user} joined the chat."
+
+                elif message_type == "-DISCONNECT-": # A message sent by the server when a user leaves the chat room
+                    user = message_dict["user"]
+                    message = f"{user} has left the chat."
+
+                else:
+                    message = "Error: unknown message"
+
+                messages.append(message)
                 update_messages(messages, window)
 
 def update_messages(messages, window):
@@ -170,4 +171,4 @@ def update_messages(messages, window):
     visible_messages = visible_messages[:num_rows][::-1]
     for i in range(num_rows):
         row = f"-OUTPUT{i+1}-"
-        window[row].update(" ".join(visible_messages[i]))
+        window[row].update(visible_messages[i])
