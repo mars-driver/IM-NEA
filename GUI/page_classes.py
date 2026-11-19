@@ -142,7 +142,7 @@ class Messaging(Page):
         client_object.connect(name)
         messages = []
 
-        Thread(target=client_object.receive).start()
+        Thread(target=client_object.receive, daemon=True).start()
 
         while True:
             event, values = window.read()

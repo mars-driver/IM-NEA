@@ -38,12 +38,11 @@ def GUI_main(accounts, server_ip, port): # need server_ip and port
             current_page = PAGES[new_page_name]
         except TypeError:
             print("You closed the window.")
-            WINDOW.close()
             break
         except:
             print("Error. Closing window.")
-            WINDOW.close()
             break
+    WINDOW.close()
 
 class User:
     def __init__(self):
