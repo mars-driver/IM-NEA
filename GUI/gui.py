@@ -1,13 +1,14 @@
 import PySimpleGUI as sg # library for GUI
 from GUI import layouts, page_classes
-from modules import client
 
 # CONSTANTS
 
 PAGES = {
+    "-CONNECTING-PAGE-": page_classes.Connecting("-CONNECTING-PAGE-", layouts.CONNECTING_LAYOUT, sg.WIN_CLOSED),
     "-SIGNUP-PAGE-": page_classes.SignUp("-SIGNUP-PAGE-", layouts.SIGNUP_LAYOUT, sg.WIN_CLOSED),
     "-LOGIN-PAGE-": page_classes.LogIn("-LOGIN-PAGE-", layouts.LOGIN_LAYOUT, sg.WIN_CLOSED),
     "-CUSTOMISE-PAGE-": page_classes.Customise("-CUSTOMISE-PAGE-", layouts.CUSTOMISE_PROFILE_LAYOUT, sg.WIN_CLOSED),
+    "-HOME-PAGE-": page_classes.Home("-HOME-PAGE-", layouts.HOME_LAYOUT, sg.WIN_CLOSED),
     "-MESSAGING-PAGE-": page_classes.Messaging("-MESSAGING-PAGE-", layouts.MESSAGING_LAYOUT, sg.WIN_CLOSED)
 }
 
@@ -26,13 +27,10 @@ def GUI_main(accounts, server_ip, port): # need server_ip and port
     """
     main program
     """
-
-    current_page = PAGES["-SIGNUP-PAGE-"]
+    PAGES["-CONNECTING-PAGE-"].set_server_ip(server_ip)
+    PAGES["-CONNECTING-PAGE-"].set_port(port)
+    current_page = PAGES["-CONNECTING-PAGE-"]
     current_user = User()
-
-    client_object = client.ChatClient(server_ip, port, WINDOW)
-    client_object.connect()
-    current_user.set_client_object(client_object)
 
     while True:
         try:
@@ -40,9 +38,6 @@ def GUI_main(accounts, server_ip, port): # need server_ip and port
             current_page = PAGES[new_page_name]
         except TypeError:
             print("You closed the window.")
-            break
-        except:
-            print("Error. Closing window.")
             break
     WINDOW.close()
 
@@ -58,6 +53,8 @@ class User:
         return self.__client_object
     def set_username(self, new_username):
         self.__username = new_username
-        self.__client_object.set_name(new_username)
+        self.__client_object.set_username(new_username)
     def set_client_object(self, new_client_object):
         self.__client_object = new_client_object
+    def set_current_room_id(self, new_room_id):
+        self.__client_object.set_current_room_id(new_room_id)

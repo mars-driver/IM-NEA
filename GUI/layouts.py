@@ -10,11 +10,13 @@ INPUT_OUTPUT_SIZE = 28
 MAIN_BUTTON_SIZE = 18
 SINGLE_FRAME_SIZE = (500, 250)
 DUAL_FRAME_SIZE = (250,250)
-MAIN_FRAME_SIZE = (700,700)
+DUAL_COLUMN_SIZE = (350, 350)
+MAIN_FRAME_SIZE = (1000,700)
 DUAL_FRAME_BUTTON_SIZE = (27,1)
 TEXTBOX_SIZE = (30,7)
 CHATBOX_SIZE = (40,1)
 PROMPTBOX_SIZE = (15,1)
+ROOM_FRAME_SIZE = (300,100)
 INITIAL_METADATA = 0
 ICON_SIZE = 4
 BACKGROUND_COLOUR = "grey94"
@@ -109,6 +111,27 @@ LOGIN_LAYOUT = [
     [sg.Text("")]
 ]
 
+HOME_LAYOUT = [
+    [sg.VPush()],
+    [ # two centralised columns (frames)
+        sg.Push(),
+        # column 1 - Friends List
+        sg.Frame("", [
+            [sg.Text("Friends List:", font= (MAIN_FONT, TITLE_SIZE))],
+            [sg.Column([], size=DUAL_COLUMN_SIZE, scrollable=True, vertical_scroll_only=True, key="-FRIENDS-COLUMN-")] # todo friends list goes here
+        ], size=DUAL_COLUMN_SIZE, border_width=5),
+        # column 2 - Chat Rooms
+        sg.Frame("", [
+            [sg.Text("Open chat rooms:", font= (MAIN_FONT, TITLE_SIZE))],
+            [sg.Text("No open rooms! Click below to open a new room", visible=False, key="-NO-ROOMS-")],
+            [sg.Button("Create new room", font=(MAIN_FONT, MAIN_BUTTON_SIZE), k="-NEW-ROOM-")],
+            [sg.Column([], size=DUAL_COLUMN_SIZE, scrollable=True, vertical_scroll_only=True, key="-CHATROOM-COLUMN-")],
+        ], size=DUAL_COLUMN_SIZE, border_width=5),
+        sg.Push()
+    ],
+    [sg.VPush()]
+]
+
 MESSAGING_LAYOUT = [
     [sg.VPush()],
     [sg.Push(), sg.Frame("", [
@@ -129,6 +152,11 @@ MESSAGING_LAYOUT = [
     [sg.VPush()]
 ]
 
+CONNECTING_LAYOUT = [
+    [sg.Push(), sg.Text("Connecting...", font=(MAIN_FONT, TITLE_SIZE)), sg.Push()],
+    [sg.Text("Please wait.")],
+]
+
 def create_main_layout(page_tabs):
     layout = [
         [sg.Push(), sg.Frame("", [
@@ -147,3 +175,26 @@ def create_main_layout(page_tabs):
         ], border_width=False, size=MAIN_FRAME_SIZE), sg.Push()]
     ]
     return layout
+
+def update_chatroom_column(window, chatroom_list):
+    if len(chatroom_list) == 0:
+        window["-NO-ROOMS-"].update(visible=True)
+    else:
+        chatroom_list_layout = [
+            [sg.Frame("", [
+                [sg.VPush()],
+                [sg.Button(
+                    button_text=f"{chatroom_list[i]['name']}",
+                    font=(MAIN_FONT, 12),
+                    tooltip="Click to join!",
+                    border_width=0,
+                    k=f"-ROOM-{i}-"
+                )],
+                [sg.Text(f"Host: {chatroom_list[i]['host']}", font=(MAIN_FONT, 10), k=f"-HOST{i}-")],
+                [sg.Text(f"Members: {str(len(chatroom_list[i]['members']))}", font=(MAIN_FONT, 10), k=f"-MEMBERS{i}-")],
+                [sg.VPush()]
+                ], size=ROOM_FRAME_SIZE, border_width=1)]
+                for i in range(len(chatroom_list))
+        ]
+        window.extend_layout(window["-CHATROOM-COLUMN-"], chatroom_list_layout)
+    window["-CHATROOM-COLUMN-"].contents_changed()

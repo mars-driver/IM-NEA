@@ -1,4 +1,5 @@
 from modules import sign_up, log_in, client # my modules
+from GUI import layouts
 from PIL import Image
 from threading import Thread
 
@@ -42,6 +43,39 @@ class Page:
         window[self.get_name()].update(visible=False)
         return new_page_name # returns the name of the new page
 
+class Connecting(Page):
+    def __init__(self, new_name, new_layout, new_windowclosed):
+        super().__init__(new_name, new_layout, new_windowclosed)
+        self.__server_ip = None
+        self.__port = None
+
+    def get_server_ip(self):
+        return self.__server_ip
+    def get_port(self):
+        return self.__port
+    def set_server_ip(self, new_server_ip):
+        self.__server_ip = new_server_ip
+    def set_port(self, new_port):
+        self.__port = new_port
+
+    def run_events(self, accounts, current_user):
+        window = self.get_window()
+        window_closed = self.get_window_closed()
+
+        while True:
+            event, values = window.read(timeout=100)
+            if event == window_closed:
+                break
+            else:
+                try:
+                    client_object = client.ChatClient(self.get_server_ip(), self.get_port(), window)
+                    current_user.set_client_object(client_object)
+                    client_object.connect()
+                    current_user.set_client_object(client_object)
+                    return self.change_page("-SIGNUP-PAGE-"), current_user
+                except:
+                    pass
+
 class SignUp(Page):
     def run_events(self, accounts, current_user):
         """
@@ -80,7 +114,7 @@ class LogIn(Page):
                 window["-LOGIN-OUTPUT-"].update(result)
                 if result == "Login successful.":
                     current_user.set_username(values["-LOGIN-USERNAME-"])
-                    return self.change_page("-MESSAGING-PAGE-"), current_user
+                    return self.change_page("-HOME-PAGE-"), current_user
             elif event == "-SIGNUP-FROM-LOGIN-":
                 return self.change_page("-SIGNUP-PAGE-"), current_user # returns new page name and current user
 
@@ -101,7 +135,7 @@ class Customise(Page):
                 new_bio = values["-CUSTOMISE-BIO-"]
                 window["-CUSTOMISE-SHOWBIO-"].update(new_bio)
             elif event == "-CONFIRM-":
-                return self.change_page("-MESSAGING-PAGE-"), current_user
+                return self.change_page("-HOME-PAGE-"), current_user
             elif event == "-LOGIN-FROM-CUSTOMISE-":
                 return self.change_page("-LOGIN-PAGE-"), current_user
             elif event == "-CUSTOMISE-PFP-":
@@ -111,6 +145,36 @@ class Customise(Page):
                 new_pfp_image.close()
                 new_pfp = "media\\pfp.png"
                 window["-SHOW-PFP-"].update(new_pfp)
+
+class Home(Page):
+    def run_events(self, accounts, current_user):
+        window = self.get_window()
+        window_closed = self.get_window_closed()
+        client_object = current_user.get_client_object()
+
+        print("[pc] requesting chat rooms")
+        current_chatroom_list = client_object.get_chatrooms()
+        print("[pc] chat rooms:", current_chatroom_list)
+
+        layouts.update_chatroom_column(window, current_chatroom_list)
+
+        while True:
+            event, values = window.read()
+            print("[pc] home event:", event)
+            if event == window_closed:
+                break
+            if event[0] == "-RECEIVED-":
+                print("[pc] received")
+                print("[pc] values:", values)
+                #client_object.receive_chatroom()
+            elif event.split("-")[1] == "ROOM":
+                room_index = int(event.split("-")[2])
+                selected_room = current_chatroom_list[room_index]
+                print("[pc] room selected:", selected_room)
+                current_user.set_current_room_id(selected_room["id"])
+                print("[pc] set current room id to", selected_room["id"])
+                return self.change_page("-MESSAGING-PAGE-"), current_user
+
 
 class Messaging(Page):
     def run_events(self, accounts, current_user):
@@ -126,8 +190,13 @@ class Messaging(Page):
 
         while True:
             event, values = window.read()
+            print("[pc] messaging event:", event)
             if event == window_closed:
                 break
+
+            elif event == "-LEAVE-ROOM-":
+                client_object.leave_room()
+                return self.change_page("-HOME-PAGE-"), current_user
 
             elif event == "-SEND-MESSAGE-":
                 message = values["-MESSAGE-"]
@@ -138,12 +207,13 @@ class Messaging(Page):
             elif event[0] == "-RECEIVED-":
                 message_type = event[1]
                 message_dict = values[event]
+                print("[pc] messaging received type:", message_type)
 
                 if message_type == "-TEXT-": # A message sent from a user to a chat room
                     sender = message_dict["sender"]
                     content = message_dict["content"]
                     message = f"{sender}: {content}"
-                    print("new message:", message)
+                    print("[pc] new message:", message)
 
                 elif message_type == "-JOIN-": # A message sent by the server when a user joins the chat room
                     user = message_dict["user"]
@@ -155,6 +225,7 @@ class Messaging(Page):
 
                 else:
                     message = "Error: unknown message"
+                    print("[pc]", message)
 
                 messages.append(message)
                 update_messages(messages, window)
