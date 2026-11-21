@@ -185,6 +185,7 @@ class Messaging(Page):
         window_closed = self.get_window_closed()
         client_object = current_user.get_client_object()
         messages = []
+        update_messages(messages, window)
 
         Thread(target=client_object.receive, daemon=True).start()
 
@@ -195,6 +196,7 @@ class Messaging(Page):
                 break
 
             elif event == "-LEAVE-ROOM-":
+                client_object.set_in_room(False)
                 client_object.leave_room()
                 return self.change_page("-HOME-PAGE-"), current_user
 

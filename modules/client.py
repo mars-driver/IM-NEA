@@ -56,23 +56,32 @@ class ChatClient:
         while True:
             print("[client receive] is client in room:", self.get_in_room())
             if not self.get_in_room():
+                print("[client receive] breaking receive loop now")
                 break
 
-            incoming_message = self.__socket.recv(1024)
-            print("[client receive] msg", incoming_message)
+            self.__socket.settimeout(5)
 
-            if self.__encryption_cipher is not None:
-                message_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
-            else:
-                message_bytes = incoming_message
-            message_dict = cbor2.loads(message_bytes)
-            message_type = message_dict["message_type"]
+            try:
+                incoming_message = self.__socket.recv(1024)
+                print("[client receive] msg", incoming_message)
+                if self.__encryption_cipher is not None:
+                    message_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
+                else:
+                    message_bytes = incoming_message
+                message_dict = cbor2.loads(message_bytes)
+                message_type = message_dict["message_type"]
 
-            print("[client receive] message type:", message_type)
+                print("[client receive] message type:", message_type)
 
-            print("[client receive] writing event -RECEIVED-")
-            self.__window.write_event_value(("-RECEIVED-", message_type), message_dict)
-            print("[client receive] event written")
+                print("[client receive] writing event -RECEIVED-")
+                self.__window.write_event_value(("-RECEIVED-", message_type), message_dict)
+                print("[client receive] event written")
+
+            except TimeoutError:
+                print("[client receive TIMEOUT CHECK] is client in room:", self.get_in_room())
+                if not self.get_in_room():
+                    print("[client receive TC] breaking receive loop now")
+                    return None
 
 
     def connect(self):
@@ -125,7 +134,7 @@ class ChatClient:
         return chatrooms
 
     def leave_room(self):
-        self.set_in_room(False)
+        #self.set_in_room(False)
         message_bytes = message_to_bytes("-LEAVE-ROOM-", {})
         self.encrypt_and_send(message_bytes)
 
