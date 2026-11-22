@@ -114,10 +114,31 @@ class ChatClient:
         encrypted_message = encryption.encrypt_message(message_bytes, self.__encryption_cipher)
         self.__socket.send(encrypted_message)
 
+    def get_current_room_id(self):
+        message_bytes = message_to_bytes("-GET-ROOM-ID-", {})
+        self.encrypt_and_send(message_bytes)
+        incoming_message = self.__socket.recv(1024)
+        room_id_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
+        room_id_dict = cbor2.loads(room_id_bytes)
+        assert room_id_dict["message_type"] == "-ROOM-ID-"
+        room_id = room_id_dict["room_id"]
+        return room_id
+
     def set_current_room_id(self, new_room_id):
         self.__in_room = True
         message_bytes = message_to_bytes("-CURRENT-ROOM-ID-", {"room_id": new_room_id})
         self.encrypt_and_send(message_bytes)
+
+    def get_room_details(self, room_id):
+        message_bytes = message_to_bytes("-ROOM-DETAILS-", {"room_id": room_id})
+        self.encrypt_and_send(message_bytes)
+        incoming_message = self.__socket.recv(1024)
+        room_details_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
+        room_details_dict = cbor2.loads(room_details_bytes)
+        assert room_details_dict["message_type"] == "-ROOM-DETAILS-"
+        room_details = room_details_dict["room_dict"]
+        return room_details
+
 
     def get_chatrooms(self):
         message_bytes = message_to_bytes("-CHATROOMS-", {})

@@ -137,7 +137,8 @@ MESSAGING_LAYOUT = [
     [sg.Push(), sg.Frame("", [
         [
             sg.Button("", image_filename="media\\back.png", image_subsample=ICON_SIZE, key="-LEAVE-ROOM-"),
-            sg.Text("Welcome to the chat room!", font=(MAIN_FONT, SUBTITLE_SIZE))],
+            sg.Text("", font=(MAIN_FONT, SUBTITLE_SIZE), key="-ROOM-NAME-")],
+        [sg.Text("", key="-MEMBERS-")],
         [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT1-")],
         [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT2-")],
         [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT3-")],

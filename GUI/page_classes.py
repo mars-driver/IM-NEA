@@ -187,6 +187,14 @@ class Messaging(Page):
         messages = []
         update_messages(messages, window)
 
+        room_id = client_object.get_current_room_id()
+        room_details = client_object.get_room_details(room_id)
+        print("room details:", room_details)
+        room_name = room_details["name"]
+        window["-ROOM-NAME-"].update(room_name)
+        num_members = len(room_details["members"])
+        window["-MEMBERS-"].update("Members: " + str(num_members))
+
         Thread(target=client_object.receive, daemon=True).start()
 
         while True:

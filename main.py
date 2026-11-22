@@ -29,4 +29,4 @@ accounts = {
 gui.GUI_main(accounts, currenthost, MY_PORT)
 
 
-#todo: fix duplicate rooms, screen not clearing, room name/members not displayed
+#todo: fix duplicate rooms
