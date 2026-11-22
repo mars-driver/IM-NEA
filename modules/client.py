@@ -53,14 +53,8 @@ class ChatClient:
         """
         receives new incoming messages from the server and displays them
         """
+        self.__socket.settimeout(1)
         while True:
-            print("[client receive] is client in room:", self.get_in_room())
-            if not self.get_in_room():
-                print("[client receive] breaking receive loop now")
-                break
-
-            self.__socket.settimeout(5)
-
             try:
                 incoming_message = self.__socket.recv(1024)
                 print("[client receive] msg", incoming_message)
@@ -78,9 +72,10 @@ class ChatClient:
                 print("[client receive] event written")
 
             except TimeoutError:
-                print("[client receive TIMEOUT CHECK] is client in room:", self.get_in_room())
+                #print("[client receive TIMEOUT CHECK] is client in room:", self.get_in_room())
                 if not self.get_in_room():
                     print("[client receive TC] breaking receive loop now")
+                    self.__socket.settimeout(None)
                     return None
 
 

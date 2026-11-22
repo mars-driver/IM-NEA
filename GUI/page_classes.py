@@ -85,6 +85,7 @@ class SignUp(Page):
         window_closed = self.get_window_closed()
         while True:
             event, values = window.read()
+            print("[pc sign up] event:", event)
             if event == window_closed:
                 break
             elif event == "-SIGN-UP-":
@@ -96,6 +97,8 @@ class SignUp(Page):
                     return self.change_page("-CUSTOMISE-PAGE-"), current_user
             elif event == "-LOGIN-FROM-SIGNUP-":
                 return self.change_page("-LOGIN-PAGE-"), current_user  # returns new page and current user
+            elif event in ("-VIEW-SIGNUP-PASSWORD-", "-VIEW-SIGNUP-CONFIRMPASSWORD-"):
+                show_password(event, window)
 
 class LogIn(Page):
     def run_events(self, accounts, current_user):
@@ -117,6 +120,8 @@ class LogIn(Page):
                     return self.change_page("-HOME-PAGE-"), current_user
             elif event == "-SIGNUP-FROM-LOGIN-":
                 return self.change_page("-SIGNUP-PAGE-"), current_user # returns new page name and current user
+            elif event == "-VIEW-LOGIN-PASSWORD-":
+                show_password(event, window)
 
 class Customise(Page):
     def run_events(self, accounts, current_user):
@@ -239,6 +244,15 @@ class Messaging(Page):
 
                 messages.append(message)
                 update_messages(messages, window)
+
+def show_password(event, window):
+    switch = (window[event].metadata + 1) % 2  # keeps track of whether button is on or off
+    element = event[5::]  # gets the name of the element (removes "-VIEW")
+    char = ("*", "")[switch]  # switches between which one to show
+    icon = ("media\\eye_open.png", "media\\eye_shut.png")[switch] # switches between icons
+    window[element].update(password_char=char)
+    window[event].update(image_filename=icon, image_subsample=4)
+    window[event].metadata = switch
 
 def update_messages(messages, window):
     """
