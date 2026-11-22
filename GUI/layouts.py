@@ -194,8 +194,31 @@ def update_chatroom_column(window, chatroom_list):
                 [sg.Text(f"Host: {chatroom_list[i]['host']}", font=(MAIN_FONT, 10), k=f"-HOST{i}-")],
                 [sg.Text(f"Members: {str(len(chatroom_list[i]['members']))}", font=(MAIN_FONT, 10), k=f"-MEMBERS{i}-")],
                 [sg.VPush()]
-                ], size=ROOM_FRAME_SIZE, border_width=1)]
+                ], size=ROOM_FRAME_SIZE, border_width=1, key=chatroom_list[i]['host'])]
                 for i in range(len(chatroom_list))
         ]
+
+        chatroom_list_layout = []
+        for i in range(len(chatroom_list)):
+            try:
+                key = chatroom_list[i]['id']
+                frame = window[key]
+            except KeyError:
+                print("adding new room with id", chatroom_list[i]['id'])
+                new_frame = [sg.Frame("", [
+                [sg.VPush()],
+                [sg.Button(
+                    button_text=f"{chatroom_list[i]['name']}",
+                    font=(MAIN_FONT, 12),
+                    tooltip="Click to join!",
+                    border_width=0,
+                    k=f"-ROOM-{i}-"
+                )],
+                [sg.Text(f"Host: {chatroom_list[i]['host']}", font=(MAIN_FONT, 10), k=f"-HOST{i}-")],
+                [sg.Text(f"Members: {str(len(chatroom_list[i]['members']))}", font=(MAIN_FONT, 10), k=f"-MEMBERS{i}-")],
+                [sg.VPush()]
+                ], size=ROOM_FRAME_SIZE, border_width=1, key=chatroom_list[i]['id'])]
+                chatroom_list_layout.append(new_frame)
+
         window.extend_layout(window["-CHATROOM-COLUMN-"], chatroom_list_layout)
     window["-CHATROOM-COLUMN-"].contents_changed()

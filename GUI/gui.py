@@ -1,6 +1,8 @@
 import PySimpleGUI as sg # library for GUI
 from GUI import layouts, page_classes
 
+sg.set_options(suppress_raise_key_errors=False, suppress_error_popups=True, suppress_key_guessing=True) # for error handling
+
 # CONSTANTS
 
 PAGES = {
