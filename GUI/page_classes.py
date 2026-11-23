@@ -192,6 +192,7 @@ class Messaging(Page):
         messages = []
         update_messages(messages, window)
 
+        # displays the room info on the window
         room_id = client_object.get_current_room_id()
         room_details = client_object.get_room_details(room_id)
         print("room details:", room_details)
@@ -209,7 +210,6 @@ class Messaging(Page):
                 break
 
             elif event == "-LEAVE-ROOM-":
-                client_object.set_in_room(False)
                 client_object.leave_room()
                 return self.change_page("-HOME-PAGE-"), current_user
 

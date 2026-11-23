@@ -53,7 +53,7 @@ class ChatClient:
         """
         receives new incoming messages from the server and displays them
         """
-        self.__socket.settimeout(1)
+        self.__socket.settimeout(1) # times out if user has left room
         while True:
             try:
                 incoming_message = self.__socket.recv(1024)
@@ -71,12 +71,11 @@ class ChatClient:
                 self.__window.write_event_value(("-RECEIVED-", message_type), message_dict)
                 print("[client receive] event written")
 
-            except TimeoutError:
-                #print("[client receive TIMEOUT CHECK] is client in room:", self.get_in_room())
+            except TimeoutError: # constantly checks that user is still in room
                 if not self.get_in_room():
                     print("[client receive TC] breaking receive loop now")
                     self.__socket.settimeout(None)
-                    return None
+                    return None # ends the thread if the user has left
 
 
     def connect(self):
@@ -110,6 +109,9 @@ class ChatClient:
         self.__socket.send(encrypted_message)
 
     def get_current_room_id(self):
+        """
+        asks the server for the current room id and returns the response
+        """
         message_bytes = message_to_bytes("-GET-ROOM-ID-", {})
         self.encrypt_and_send(message_bytes)
         incoming_message = self.__socket.recv(1024)
@@ -120,11 +122,17 @@ class ChatClient:
         return room_id
 
     def set_current_room_id(self, new_room_id):
+        """
+        sends the server the room id of the new room just joined
+        """
         self.__in_room = True
         message_bytes = message_to_bytes("-CURRENT-ROOM-ID-", {"room_id": new_room_id})
         self.encrypt_and_send(message_bytes)
 
     def get_room_details(self, room_id):
+        """
+        asks the server for the details for the room with the given id, returns the response
+        """
         message_bytes = message_to_bytes("-ROOM-DETAILS-", {"room_id": room_id})
         self.encrypt_and_send(message_bytes)
         incoming_message = self.__socket.recv(1024)
@@ -136,6 +144,9 @@ class ChatClient:
 
 
     def get_chatrooms(self):
+        """
+        asks the server for a list of all the currently open chat rooms and returns the result
+        """
         message_bytes = message_to_bytes("-CHATROOMS-", {})
         self.encrypt_and_send(message_bytes)
         print("[client get] waiting for chatrooms...")
@@ -150,7 +161,10 @@ class ChatClient:
         return chatrooms
 
     def leave_room(self):
-        #self.set_in_room(False)
+        """
+        informs the server that the user has left the current room
+        """
+        self.set_in_room(False)
         message_bytes = message_to_bytes("-LEAVE-ROOM-", {})
         self.encrypt_and_send(message_bytes)
 
