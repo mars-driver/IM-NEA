@@ -74,7 +74,6 @@ class ChatClient:
             except TimeoutError: # constantly checks that user is still in room
                 if not self.get_in_room():
                     print("[client receive TC] breaking receive loop now")
-                    self.__socket.settimeout(None)
                     return None # ends the thread if the user has left
 
 
@@ -144,6 +143,7 @@ class ChatClient:
 
 
     def get_chatrooms(self):
+        self.__socket.settimeout(None)
         """
         asks the server for a list of all the currently open chat rooms and returns the result
         """

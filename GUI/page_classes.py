@@ -246,6 +246,9 @@ class Messaging(Page):
                 update_messages(messages, window)
 
 def show_password(event, window):
+    """
+    procedure to make change password visibility (makes visible if hidden, or hides if visible)
+    """
     switch = (window[event].metadata + 1) % 2  # keeps track of whether button is on or off
     element = event[5::]  # gets the name of the element (removes "-VIEW")
     char = ("*", "")[switch]  # switches between which one to show

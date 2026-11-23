@@ -2,13 +2,13 @@ from GUI import gui # my gui.py file
 
 # CONSTANTS
 HOMEHOST = "192.168.1.122"
-SCHOOLHOST = "10.56.81.185"
+SCHOOLHOST = "10.97.160.183"
 LOCALHOST = "127.0.0.1"
 GRANNYHOST = "192.168.1.138"
 MARSHOST = "10.58.50.14"
 MY_PORT = 13108
 
-currenthost = HOMEHOST
+currenthost = SCHOOLHOST
 
 # test data
 
