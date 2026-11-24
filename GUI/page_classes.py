@@ -219,7 +219,6 @@ class Messaging(Page):
                 if message != "":
                     message_dict = {
                         "message_type": "-TEXT-",
-                        "sender": client_object.get_username(),
                         "content": message
                     }
                     client_object.send_text(message_dict)
