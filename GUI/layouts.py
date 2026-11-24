@@ -10,13 +10,14 @@ INPUT_OUTPUT_SIZE = 28
 MAIN_BUTTON_SIZE = 18
 FRAME_TITLE_SIZE = 12
 FRAME_BORDER_SIZE = 5
-SINGLE_FRAME_SIZE = (500, 250)
+SINGLE_FRAME_SIZE = (500,250)
 DUAL_FRAME_SIZE = (250,250)
 DUAL_COLUMN_SIZE = (350, 350)
 MAIN_FRAME_SIZE = (1000,700)
 DUAL_FRAME_BUTTON_SIZE = (27,1)
 TEXTBOX_SIZE = (30,7)
-CHATBOX_SIZE = (40,1)
+MESSAGING_PAGE_SIZE = (700,400)
+MESSAGE_PADDING = 10
 PROMPTBOX_SIZE = (15,1)
 DESCRIPTION_SIZE = 10
 ROOM_FRAME_SIZE = (300,100)
@@ -142,13 +143,21 @@ MESSAGING_LAYOUT = [
             sg.Button("", image_filename="media\\back.png", image_subsample=ICON_SIZE, key="-LEAVE-ROOM-"),
             sg.Text("", font=(MAIN_FONT, SUBTITLE_SIZE), key="-ROOM-NAME-")],
         [sg.Text("", key="-MEMBERS-")],
-        [sg.Multiline(expand_x=True, expand_y=True, autoscroll=True, background_color=BACKGROUND_COLOUR, disabled=True, key="-TEXT-OUTPUT-")],
+        [sg.Multiline(
+            reroute_cprint=True,
+            expand_x=True,
+            expand_y=True,
+            autoscroll=True,
+            background_color=BACKGROUND_COLOUR,
+            border_width=False,
+            disabled=True,
+            key="-TEXT-OUTPUT-")],
         [
             sg.Text("Type message here:", size=PROMPTBOX_SIZE),
             sg.Input(size=PROMPTBOX_SIZE, key="-MESSAGE-", expand_x=True, do_not_clear=False),
             sg.Button("send", bind_return_key=True, key="-SEND-MESSAGE-"), sg.Push()
         ],
-    ], size=SINGLE_FRAME_SIZE, border_width=False), sg.Push()],
+    ], size=MESSAGING_PAGE_SIZE, border_width=1), sg.Push()],
     [sg.VPush()]
 ]
 
@@ -206,37 +215,47 @@ def update_chatroom_column(window, chatroom_list):
     window["-CHATROOM-COLUMN-"].contents_changed()
 
 
-def update_screen(messages, window):
+def update_screen(message_dict):
     """
     procedure to handle updating the display with the most recent messages
     """
 
-    """
-    if message_dict["message_type"] == "-TEXT-":
+    message_type = message_dict["message_type"]
+
+    if message_type == "-TEXT-":  # A message sent from a user to a chat room
         sender = message_dict["sender"]
         content = message_dict["content"]
-        new_message_layout = [sg.Frame("", [
-            [sg.VPush()],
-            [sg.Text(
-                text=sender,
-                font=(MAIN_FONT, FRAME_TITLE_SIZE),
-            )],
-            [sg.Text(f"Content: {content}", font=(MAIN_FONT, DESCRIPTION_SIZE))],
-            [sg.VPush()]
-        ], size=ROOM_FRAME_SIZE)]
+        if sender == "You":
+            justification = "right"
+            sender += " " * MESSAGE_PADDING
+            content += " " * MESSAGE_PADDING
+        else:
+            justification = "left"
+        sg.cprint(sender, font=(MAIN_FONT, FRAME_TITLE_SIZE), justification=justification)
+        sg.cprint(content, font=(MAIN_FONT, DESCRIPTION_SIZE), justification=justification)
+        sg.cprint()
+
+    elif message_type == "-JOIN-":  # A message sent by the server when a user joins the chat room
+        user = message_dict["user"]
+        message = f"{user} joined the chat."
+        sg.cprint(message, font=(MAIN_FONT, DESCRIPTION_SIZE))
+        sg.cprint()
+
+    elif message_type == "-DISCONNECT-":  # A message sent by the server when a user leaves the chat room
+        user = message_dict["user"]
+        message = f"{user} has left the chat."
+        sg.cprint(message, font=(MAIN_FONT, DESCRIPTION_SIZE))
+        sg.cprint()
+
+    elif message_type == "-WELCOME-":
+        room_name = message_dict["room_name"]
+        message = f"Welcome to {room_name}!"
+        sg.cprint(message, font=(MAIN_FONT, DESCRIPTION_SIZE))
+        sg.cprint()
+
     else:
-        new_message_layout = [sg.Frame("", [
-            [sg.VPush()],
-            [sg.Text(message_dict["content"], font=(MAIN_FONT, DESCRIPTION_SIZE))],
-            [sg.VPush()]
-        ], size=ROOM_FRAME_SIZE)]
-        
-    """
+        message = "Error: unknown message"
+        print("[pc]", message)
 
-    messages_string = ""
-    for message in messages:
-        messages_string = messages_string + message + "\n"
-
-    window["-TEXT-OUTPUT-"].update(messages_string)
-
-    #window.extend_layout(window["-TEXT-OUTPUT-"], new_message_layout)
+def clear_screen(window):
+    window["-TEXT-OUTPUT-"].update("")

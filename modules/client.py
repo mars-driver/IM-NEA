@@ -39,14 +39,11 @@ class ChatClient:
 
     # METHODS
 
-    def send(self, message): # replaces old send()
+    def send_text(self, message_dict): # replaces old send()
         """
         takes a message as an input from the user and sends it to the server
         """
-        message_bytes = message_to_bytes("-TEXT-", {
-            "sender": self.__username,
-            "content": message
-        })
+        message_bytes = message_to_bytes("-TEXT-", message_dict)
         self.encrypt_and_send(message_bytes)
 
     def receive(self): # replaces old receive()

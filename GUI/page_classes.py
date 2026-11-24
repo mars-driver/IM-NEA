@@ -189,8 +189,7 @@ class Messaging(Page):
         window = self.get_window()
         window_closed = self.get_window_closed()
         client_object = current_user.get_client_object()
-        messages = []
-        layouts.update_screen(messages, window)
+        layouts.clear_screen(window)
 
         # displays the room info on the window
         room_id = client_object.get_current_room_id()
@@ -200,6 +199,8 @@ class Messaging(Page):
         window["-ROOM-NAME-"].update(room_name)
         num_members = len(room_details["members"])
         window["-MEMBERS-"].update("Members: " + str(num_members))
+
+        layouts.update_screen({"message_type": "-WELCOME-", "room_name": room_name})
 
         Thread(target=client_object.receive, daemon=True).start()
 
@@ -215,43 +216,26 @@ class Messaging(Page):
 
             elif event == "-SEND-MESSAGE-":
                 message = values["-MESSAGE-"]
-                messages.append("You: " + message)
-                message_dict = {
-            "message_type": "-TEXT-",
-            "sender": "You",
-            "content": message
-        }
-                client_object.send(message)
-                print("[pc] message_dict:", message_dict) # tick!
-                layouts.update_screen(messages, window)
+                if message != "":
+                    message_dict = {
+                        "message_type": "-TEXT-",
+                        "sender": client_object.get_username(),
+                        "content": message
+                    }
+                    client_object.send_text(message_dict)
+                    message_dict["sender"] = "You"
+                    print("[pc] message_dict:", message_dict) # tick!
+                    layouts.update_screen(message_dict)
+                else:
+                    print("cannot send an empty string")
 
             elif event[0] == "-RECEIVED-":
                 message_type = event[1]
                 message_dict = values[event]
+                layouts.update_screen(message_dict)
+
                 print("[pc] messaging received type:", message_type)
 
-                if message_type == "-TEXT-": # A message sent from a user to a chat room
-                    sender = message_dict["sender"]
-                    content = message_dict["content"]
-                    message = f"{sender}: {content}"
-                    print("[pc] new message:", message)
-
-                elif message_type == "-JOIN-": # A message sent by the server when a user joins the chat room
-                    user = message_dict["user"]
-                    message = f"{user} joined the chat."
-
-                elif message_type == "-DISCONNECT-": # A message sent by the server when a user leaves the chat room
-                    user = message_dict["user"]
-                    message = f"{user} has left the chat."
-
-                else:
-                    message = "Error: unknown message"
-                    print("[pc]", message)
-
-                message_dict = {"message_type": "-OTHER-", "content": message}
-
-                messages.append(message)
-                layouts.update_screen(messages, window)
 
 def show_password(event, window):
     """
