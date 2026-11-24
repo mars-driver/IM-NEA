@@ -2,7 +2,7 @@ from GUI import gui # my gui.py file
 
 # CONSTANTS
 HOMEHOST = "192.168.1.122"
-SCHOOLHOST = "10.97.160.183"
+SCHOOLHOST = "10.56.83.181"
 LOCALHOST = "127.0.0.1"
 GRANNYHOST = "192.168.1.138"
 MARSHOST = "10.58.50.14"
@@ -29,4 +29,4 @@ accounts = {
 gui.GUI_main(accounts, currenthost, MY_PORT)
 
 
-#todo:
+#todo: working on getting messaging page to constantly update & changing texts on screen to be one scrollable thing

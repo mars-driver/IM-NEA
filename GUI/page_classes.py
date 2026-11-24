@@ -190,7 +190,7 @@ class Messaging(Page):
         window_closed = self.get_window_closed()
         client_object = current_user.get_client_object()
         messages = []
-        update_messages(messages, window)
+        layouts.update_screen(messages, window)
 
         # displays the room info on the window
         room_id = client_object.get_current_room_id()
@@ -216,8 +216,14 @@ class Messaging(Page):
             elif event == "-SEND-MESSAGE-":
                 message = values["-MESSAGE-"]
                 messages.append("You: " + message)
+                message_dict = {
+            "message_type": "-TEXT-",
+            "sender": "You",
+            "content": message
+        }
                 client_object.send(message)
-                update_messages(messages, window)
+                print("[pc] message_dict:", message_dict) # tick!
+                layouts.update_screen(messages, window)
 
             elif event[0] == "-RECEIVED-":
                 message_type = event[1]
@@ -242,8 +248,10 @@ class Messaging(Page):
                     message = "Error: unknown message"
                     print("[pc]", message)
 
+                message_dict = {"message_type": "-OTHER-", "content": message}
+
                 messages.append(message)
-                update_messages(messages, window)
+                layouts.update_screen(messages, window)
 
 def show_password(event, window):
     """
@@ -256,17 +264,3 @@ def show_password(event, window):
     window[element].update(password_char=char)
     window[event].update(image_filename=icon, image_subsample=4)
     window[event].metadata = switch
-
-def update_messages(messages, window):
-    """
-    procedure to handle updating the display with the most recent messages
-    """
-    num_rows = 5
-    visible_messages = messages[::-1]
-    if len(messages) < num_rows:
-        for _ in range(num_rows - len(messages)):
-            visible_messages.append("")
-    visible_messages = visible_messages[:num_rows][::-1]
-    for i in range(num_rows):
-        row = f"-OUTPUT{i+1}-"
-        window[row].update(visible_messages[i])

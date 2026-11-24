@@ -142,11 +142,7 @@ MESSAGING_LAYOUT = [
             sg.Button("", image_filename="media\\back.png", image_subsample=ICON_SIZE, key="-LEAVE-ROOM-"),
             sg.Text("", font=(MAIN_FONT, SUBTITLE_SIZE), key="-ROOM-NAME-")],
         [sg.Text("", key="-MEMBERS-")],
-        [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT1-")],
-        [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT2-")],
-        [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT3-")],
-        [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT4-")],
-        [sg.Text(size=CHATBOX_SIZE, key="-OUTPUT5-")],
+        [sg.Multiline(expand_x=True, expand_y=True, autoscroll=True, background_color=BACKGROUND_COLOUR, disabled=True, key="-TEXT-OUTPUT-")],
         [
             sg.Text("Type message here:", size=PROMPTBOX_SIZE),
             sg.Input(size=PROMPTBOX_SIZE, key="-MESSAGE-", expand_x=True, do_not_clear=False),
@@ -208,3 +204,39 @@ def update_chatroom_column(window, chatroom_list):
 
         window.extend_layout(window["-CHATROOM-COLUMN-"], chatroom_list_layout)
     window["-CHATROOM-COLUMN-"].contents_changed()
+
+
+def update_screen(messages, window):
+    """
+    procedure to handle updating the display with the most recent messages
+    """
+
+    """
+    if message_dict["message_type"] == "-TEXT-":
+        sender = message_dict["sender"]
+        content = message_dict["content"]
+        new_message_layout = [sg.Frame("", [
+            [sg.VPush()],
+            [sg.Text(
+                text=sender,
+                font=(MAIN_FONT, FRAME_TITLE_SIZE),
+            )],
+            [sg.Text(f"Content: {content}", font=(MAIN_FONT, DESCRIPTION_SIZE))],
+            [sg.VPush()]
+        ], size=ROOM_FRAME_SIZE)]
+    else:
+        new_message_layout = [sg.Frame("", [
+            [sg.VPush()],
+            [sg.Text(message_dict["content"], font=(MAIN_FONT, DESCRIPTION_SIZE))],
+            [sg.VPush()]
+        ], size=ROOM_FRAME_SIZE)]
+        
+    """
+
+    messages_string = ""
+    for message in messages:
+        messages_string = messages_string + message + "\n"
+
+    window["-TEXT-OUTPUT-"].update(messages_string)
+
+    #window.extend_layout(window["-TEXT-OUTPUT-"], new_message_layout)
