@@ -170,8 +170,7 @@ def create_main_layout(page_tabs):
     layout = [
         [sg.Push(), sg.Frame("", [
     [sg.Text("")],
-        [sg.Text("APP NAME", font=(MAIN_FONT, APP_NAME_SIZE))],
-        [sg.Text("NOT LOGGED IN", key="-LOGGED-IN?-"), sg.Push(), sg.Text("NOT CONNECTED", key="-CONNECTED?-")],
+        [sg.Text("", font=(MAIN_FONT, APP_NAME_SIZE))], #app name
         [sg.Text("")],
         [sg.Push(),
         sg.TabGroup(
