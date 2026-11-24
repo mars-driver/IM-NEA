@@ -218,11 +218,10 @@ class Messaging(Page):
                 message = values["-MESSAGE-"]
                 if message != "":
                     message_dict = {
-                        "message_type": "-TEXT-",
-                        "content": message
+                        "message_type": "-SENT-",
+                        "content": message,
                     }
                     client_object.send_text(message_dict)
-                    message_dict["sender"] = "You"
                     print("[pc] message_dict:", message_dict) # tick!
                     layouts.update_screen(message_dict)
                 else:

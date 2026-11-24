@@ -1,4 +1,5 @@
 import PySimpleGUI as sg # library for GUI
+import time
 
 # CONSTANTS
 
@@ -17,6 +18,9 @@ MAIN_FRAME_SIZE = (1000,700)
 DUAL_FRAME_BUTTON_SIZE = (27,1)
 TEXTBOX_SIZE = (30,7)
 MESSAGING_PAGE_SIZE = (700,400)
+MESSAGE_SENDER_SIZE = 15
+MESSAGE_SIZE = 12
+TIME_SIZE = 8
 MESSAGE_PADDING = 5
 PROMPTBOX_SIZE = (15,1)
 DESCRIPTION_SIZE = 10
@@ -230,33 +234,43 @@ def update_screen(message_dict):
 
     if message_type == "-TEXT-":  # A message sent from a user to a chat room
         sender = message_dict["sender"]
-        content = message_dict["content"]
-        if sender == "You":
-            justification = "right"
-            sender += " " * MESSAGE_PADDING
-            content += " " * MESSAGE_PADDING
-        else:
-            justification = "left"
-        sg.cprint(sender, font=(MAIN_FONT, FRAME_TITLE_SIZE), justification=justification)
-        sg.cprint(content, font=(MAIN_FONT, DESCRIPTION_SIZE), justification=justification)
+        content = message_dict["content"] + " "
+        time_sent = message_dict["time_sent"]
+        time_sent_string = "(" + get_time_string(time_sent) + ")"
+        sg.cprint(sender, font=(MAIN_FONT, MESSAGE_SENDER_SIZE))
+        sg.cprint(content, font=(MAIN_FONT, MESSAGE_SIZE), end="")
+        sg.cprint(time_sent_string, font=(MAIN_FONT, TIME_SIZE))
         sg.cprint()
+
+    if message_type == "-SENT-":
+        sender = "You" + "  "
+        content = " " + message_dict["content"] + "   "
+        time_sent = time.time()
+        time_sent_string = "(" + get_time_string(time_sent) + ")"
+        justification = "right"
+        sg.cprint(sender, font=(MAIN_FONT, MESSAGE_SENDER_SIZE), justification=justification)
+        sg.cprint(time_sent_string, font=(MAIN_FONT, TIME_SIZE), justification=justification, end="")
+        sg.cprint(content, font=(MAIN_FONT, MESSAGE_SIZE), justification=justification)
+        sg.cprint()
+
+
 
     elif message_type == "-JOIN-":  # A message sent by the server when a user joins the chat room
         user = message_dict["user"]
         message = f"{user} joined the chat."
-        sg.cprint(message, font=(MAIN_FONT, DESCRIPTION_SIZE))
+        sg.cprint(message, font=(MAIN_FONT, MESSAGE_SIZE))
         sg.cprint()
 
     elif message_type == "-DISCONNECT-":  # A message sent by the server when a user leaves the chat room
         user = message_dict["user"]
         message = f"{user} has left the chat."
-        sg.cprint(message, font=(MAIN_FONT, DESCRIPTION_SIZE))
+        sg.cprint(message, font=(MAIN_FONT, MESSAGE_SIZE))
         sg.cprint()
 
     elif message_type == "-WELCOME-":
         room_name = message_dict["room_name"]
         message = f"Welcome to {room_name}!"
-        sg.cprint(message, font=(MAIN_FONT, DESCRIPTION_SIZE))
+        sg.cprint(message, font=(MAIN_FONT, MESSAGE_SIZE))
         sg.cprint()
 
     else:
@@ -265,3 +279,11 @@ def update_screen(message_dict):
 
 def clear_screen(window):
     window["-TEXT-OUTPUT-"].update("")
+
+def get_time_string(epoch_time):
+    time_struct = time.localtime(epoch_time)
+    hour, minute = time_struct.tm_hour, time_struct.tm_min
+    if minute < 10:
+        minute = "0" + str(minute)
+    time_sent = f"{hour}:{minute}"
+    return time_sent
