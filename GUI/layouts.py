@@ -17,12 +17,13 @@ MAIN_FRAME_SIZE = (1000,700)
 DUAL_FRAME_BUTTON_SIZE = (27,1)
 TEXTBOX_SIZE = (30,7)
 MESSAGING_PAGE_SIZE = (700,400)
-MESSAGE_PADDING = 10
+MESSAGE_PADDING = 5
 PROMPTBOX_SIZE = (15,1)
 DESCRIPTION_SIZE = 10
 ROOM_FRAME_SIZE = (300,100)
 INITIAL_METADATA = 0
 ICON_SIZE = 4
+BACK_BUTTON_SIZE = 3
 BACKGROUND_COLOUR = "grey94"
 APP_THEME = "SystemDefault1"
 
@@ -106,7 +107,11 @@ LOGIN_LAYOUT = [
         [sg.Text("")],
         [sg.Text("enter password:")],
         [sg.Input(password_char="*", expand_x=True, key="-LOGIN-PASSWORD-"),
-         sg.Button("", image_filename="media\\eye_open.png", image_subsample=ICON_SIZE, metadata=INITIAL_METADATA, key="-VIEW-LOGIN-PASSWORD-")],
+         sg.Button("",
+                   image_filename="media\\eye_open.png",
+                   image_subsample=ICON_SIZE,
+                   metadata=INITIAL_METADATA,
+                   key="-VIEW-LOGIN-PASSWORD-")],
         [sg.Button("forgot password", key="-RECOVERY-FROM-LOGIN-")],
         [sg.Text(key="-LOGIN-OUTPUT-")],
     ], size=SINGLE_FRAME_SIZE, border_width=False),
@@ -140,9 +145,11 @@ MESSAGING_LAYOUT = [
     [sg.VPush()],
     [sg.Push(), sg.Frame("", [
         [
-            sg.Button("", image_filename="media\\back.png", image_subsample=ICON_SIZE, key="-LEAVE-ROOM-"),
-            sg.Text("", font=(MAIN_FONT, SUBTITLE_SIZE), key="-ROOM-NAME-")],
-        [sg.Text("", key="-MEMBERS-")],
+            sg.Button("", image_filename="media\\back.png", image_subsample=BACK_BUTTON_SIZE, key="-LEAVE-ROOM-"),
+            sg.Text("", font=(MAIN_FONT, SUBTITLE_SIZE), key="-ROOM-NAME-"),
+            sg.Push(),
+            sg.Text("", key="-MEMBERS-")
+        ],
         [sg.Multiline(
             reroute_cprint=True,
             expand_x=True,
