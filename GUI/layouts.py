@@ -241,7 +241,7 @@ def update_screen(message_dict, window):
         sg.cprint(time_sent_string, font=(MAIN_FONT, TIME_SIZE))
         sg.cprint()
 
-    if message_type == "-SENT-":
+    elif message_type == "-SENT-":
         sender = "You" + "  "
         content = " " + message_dict["content"] + "   "
         time_sent = time.time()
@@ -251,8 +251,6 @@ def update_screen(message_dict, window):
         sg.cprint(time_sent_string, font=(MAIN_FONT, TIME_SIZE), justification=justification, end="")
         sg.cprint(content, font=(MAIN_FONT, MESSAGE_SIZE), justification=justification)
         sg.cprint()
-
-
 
     elif message_type == "-JOIN-":  # A message sent by the server when a user joins the chat room
         user = message_dict["user"]
@@ -284,7 +282,7 @@ def update_screen(message_dict, window):
 
     else:
         message = "Error: unknown message"
-        print("[pc]", message)
+        print("[layouts]", message)
         print("message:", message_dict)
 
 def clear_screen(window):
