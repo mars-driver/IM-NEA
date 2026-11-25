@@ -1,6 +1,6 @@
 import socket
 import cbor2
-from modules import encryption
+from modules import sign_up, encryption
 
 class ChatClient:
     def __init__(self, host, port, window):
@@ -105,6 +105,55 @@ class ChatClient:
         message_bytes = message_to_bytes("-SET-ROOM-ID-", {"room_id": new_room_id})
         self.encrypt_and_send(message_bytes)
 
+    def sign_up(self, values):
+        values_dict, message = sign_up.sign_up(values)
+        if values_dict:
+            message_bytes = message_to_bytes("-SIGN-UP-", values_dict)
+            self.encrypt_and_send(message_bytes)
+            incoming_message = self.__socket.recv(1024)
+            response_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
+            response_dict = cbor2.loads(response_bytes)
+            assert response_dict["message_type"] == "-SIGN-UP-RESULT-"
+            result = response_dict["outcome"]
+            if result == "-SUCCESS-":
+                return result
+            if result == "-ERROR-":
+                error_message = "Username already exists."
+                return error_message
+        else:
+            return message
+
+    def log_in(self, username, password):
+        message_bytes = message_to_bytes("-LOG-IN-", {"username": username})
+        self.encrypt_and_send(message_bytes)
+        incoming_message = self.__socket.recv(1024)
+        response_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
+        response_dict = cbor2.loads(response_bytes)
+        message_type = response_dict["message_type"]
+
+        if message_type == "-ERROR-":
+            result = response_dict["outcome"]
+            if result == "-NOT-FOUND-":
+                error_message = "Username not found."
+            elif result == "-LOCKED-":
+                error_message = "Error. Account is locked."
+            else: error_message = result
+            return error_message
+
+        salt = response_dict["salt"]
+        hashed_password = encryption.generate_hashed_password(password, salt)
+        message_bytes = message_to_bytes("-HASHED-PASSWORD-", {"hashed_password": hashed_password})
+        self.encrypt_and_send(message_bytes)
+        incoming_message = self.__socket.recv(1024)
+        result_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
+        result_dict = cbor2.loads(result_bytes)
+        assert result_dict["message_type"] == "-RESULT-"
+        result = result_dict["result"]
+        if result == "-SUCCESS-":
+            return result
+        else:
+            return "Password incorrect."
+
     def get_room_details(self):
         """
         asks the server for the details for the current room, returns the response
@@ -139,7 +188,6 @@ class ChatClient:
         self.set_in_room(False)
         message_bytes = message_to_bytes("-LEAVE-ROOM-", {})
         self.encrypt_and_send(message_bytes)
-
 
 def message_to_bytes(message_type, values_dict):
     """

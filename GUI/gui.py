@@ -18,14 +18,14 @@ PAGE_TABS = [[sg.Tab("", page.get_layout(), visible=False, k=page.get_name()) fo
 
 LAYOUT = layouts.create_main_layout(PAGE_TABS)
 
-WINDOW = sg.Window("sign up / log in", LAYOUT, resizable=True)
+WINDOW = sg.Window("", LAYOUT, resizable=True)
 
 for page in PAGES.values():
     page.set_window(WINDOW)
 
 # MAIN PROGRAM
 
-def GUI_main(accounts, server_ip, port): # need server_ip and port
+def GUI_main(server_ip, port): # need server_ip and port
     """
     main program
     """
@@ -36,7 +36,7 @@ def GUI_main(accounts, server_ip, port): # need server_ip and port
 
     while True:
         try:
-            new_page_name, current_user = current_page.run_events(accounts, current_user)
+            new_page_name, current_user = current_page.run_events(current_user)
             current_page = PAGES[new_page_name]
         except TypeError:
             print("You closed the window.")

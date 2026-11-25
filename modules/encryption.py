@@ -79,3 +79,6 @@ def string_to_key(key_string):
     A function to convert a string into a VerifyingKey object
     """
     return ecdsa.VerifyingKey.from_string(key_string, curve=CURVE)
+
+def generate_hashed_password(password, salt):
+    return str(sha256((password + salt).encode()).hexdigest())

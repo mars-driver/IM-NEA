@@ -1,4 +1,4 @@
-from modules import sign_up, log_in, client # my modules
+from modules import client # my modules
 from GUI import layouts
 from PIL import Image
 from threading import Thread
@@ -28,7 +28,7 @@ class Page:
 
     # METHODS
 
-    def run_events(self, accounts, current_user):
+    def run_events(self, current_user):
         """
         generic run_events method - this will not do anything and only exists as a template
         """
@@ -58,7 +58,7 @@ class Connecting(Page):
     def set_port(self, new_port):
         self.__port = new_port
 
-    def run_events(self, accounts, current_user):
+    def run_events(self, current_user):
         window = self.get_window()
         window_closed = self.get_window_closed()
 
@@ -76,21 +76,22 @@ class Connecting(Page):
                     pass
 
 class SignUp(Page):
-    def run_events(self, accounts, current_user):
+    def run_events(self, current_user):
         """
         function to handle running the respective events for the Sign Up page
         """
         window = self.get_window()
         window_closed = self.get_window_closed()
+        client_object = current_user.get_client_object()
         while True:
             event, values = window.read()
             if event == window_closed:
                 break
             elif event == "-SIGN-UP-":
                 relevant_values = (values["-SIGNUP-USERNAME-"], values["-SIGNUP-EMAIL-"], values["-SIGNUP-PASSWORD-"], values["-SIGNUP-CONFIRMPASSWORD-"])
-                result = sign_up.sign_up(relevant_values, accounts)
+                result = client_object.sign_up(relevant_values)
                 window["-SIGNUP-OUTPUT-"].update(result)
-                if result == "Sign up successful.":
+                if result == "-SUCCESS-":
                     current_user.set_username(values["-SIGNUP-USERNAME-"])
                     return self.change_page("-CUSTOMISE-PAGE-"), current_user
             elif event == "-LOGIN-FROM-SIGNUP-":
@@ -99,21 +100,23 @@ class SignUp(Page):
                 show_password(event, window)
 
 class LogIn(Page):
-    def run_events(self, accounts, current_user):
+    def run_events(self, current_user):
         """
         function to handle running the respective events for the Log In page
         """
         window = self.get_window()
         window_closed = self.get_window_closed()
+        client_object = current_user.get_client_object()
         while True:
             event, values = window.read()
             if event == window_closed:
                 break
             elif event == "-LOGIN-":
-                relevant_values = [values["-LOGIN-USERNAME-"], values["-LOGIN-PASSWORD-"]]
-                result = log_in.log_in(relevant_values, accounts)
+                username = values["-LOGIN-USERNAME-"]
+                password = values["-LOGIN-PASSWORD-"]
+                result = client_object.log_in(username, password)
                 window["-LOGIN-OUTPUT-"].update(result)
-                if result == "Login successful.":
+                if result == "-SUCCESS-":
                     current_user.set_username(values["-LOGIN-USERNAME-"])
                     return self.change_page("-HOME-PAGE-"), current_user
             elif event == "-SIGNUP-FROM-LOGIN-":
@@ -122,7 +125,7 @@ class LogIn(Page):
                 show_password(event, window)
 
 class Customise(Page):
-    def run_events(self, accounts, current_user):
+    def run_events(self, current_user):
         """
         function to handle running the respective events for the Customise Profile page
         """
@@ -150,7 +153,7 @@ class Customise(Page):
                 window["-SHOW-PFP-"].update(new_pfp)
 
 class Home(Page):
-    def run_events(self, accounts, current_user):
+    def run_events(self, current_user):
         window = self.get_window()
         window_closed = self.get_window_closed()
         client_object = current_user.get_client_object()
@@ -170,7 +173,7 @@ class Home(Page):
 
 
 class Messaging(Page):
-    def run_events(self, accounts, current_user):
+    def run_events(self, current_user):
         """
         procedure to handle running the respective events for the Messaging page
         """

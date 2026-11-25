@@ -1,12 +1,14 @@
 import re # regex module to assist with validity checks
+from secrets import token_hex # module to generate cryptographically secure numbers
+from hashlib import sha256
 
-def valid_new_username(new_username, accounts):
+def valid_new_username(new_username):
     """
     function to check if a username is valid based on the following conditions:
     - must be alphanumeric
     - must not already exist in the database
     """
-    return new_username.isalnum() and new_username not in accounts
+    return new_username.isalnum()
 
 def valid_email(new_email):
     """
@@ -35,17 +37,36 @@ def valid_password(new_password):
         return True
     return False
 
-def sign_up(values, accounts):
+def generate_salt():
+    len_salt = 8
+    new_salt = token_hex(len_salt)
+    return new_salt
+
+def generate_hashed_password(password, salt):
+    return str(sha256((password + salt).encode()).hexdigest())
+
+def sign_up(values):
     """
     takes in the values and the existing accounts and returns the result of a sign up attempt
     """
     username, email, password, password_again = values
-    if not valid_new_username(username, accounts):
-         return "Username invalid."
-    if not valid_email(email):
-        return "Email address invalid."
-    if not valid_password(password):
-        return "Password invalid."
-    if password != password_again: # added logic
-        return "Passwords do not match."
-    return "Sign up successful."
+    values_dict = None
+    if not valid_new_username(username):
+        message = "Username invalid."
+    elif not valid_email(email):
+        message = "Email address invalid."
+    elif not valid_password(password):
+        message = "Password invalid."
+    elif password != password_again: # added logic
+        message = "Passwords do not match."
+    else:
+        message = "Sign up successful."
+        new_salt = generate_salt()
+        hashed_password = generate_hashed_password(password, new_salt)
+        values_dict = {
+            "username": username,
+            "email": email,
+            "salt": new_salt,
+            "hashed_password": hashed_password
+        }
+    return values_dict, message
