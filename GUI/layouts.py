@@ -225,7 +225,7 @@ def update_chatroom_column(window, chatroom_list):
     window["-CHATROOM-COLUMN-"].contents_changed()
 
 
-def update_screen(message_dict):
+def update_screen(message_dict, window):
     """
     procedure to handle updating the display with the most recent messages
     """
@@ -261,17 +261,26 @@ def update_screen(message_dict):
         sg.cprint(message, font=(MAIN_FONT, MESSAGE_SIZE))
         sg.cprint()
 
+        num_members = len(message_dict["members"])
+        window["-MEMBERS-"].update("Members: " + str(num_members))
+
     elif message_type == "-DISCONNECT-":  # A message sent by the server when a user leaves the chat room
         user = message_dict["user"]
         message = f"{user} has left the chat."
         sg.cprint(message, font=(MAIN_FONT, MESSAGE_SIZE))
         sg.cprint()
 
+        num_members = len(message_dict["members"])
+        window["-MEMBERS-"].update("Members: " + str(num_members))
+
     elif message_type == "-WELCOME-":
         room_name = message_dict["room_name"]
         message = f"Welcome to {room_name}!"
         sg.cprint(message, font=(MAIN_FONT, MESSAGE_SIZE))
         sg.cprint()
+
+        num_members = len(message_dict["members"])
+        window["-MEMBERS-"].update("Members: " + str(num_members))
 
     else:
         message = "Error: unknown message"

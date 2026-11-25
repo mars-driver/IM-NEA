@@ -122,7 +122,7 @@ class ChatClient:
         sends the server the room id of the new room just joined
         """
         self.__in_room = True
-        message_bytes = message_to_bytes("-CURRENT-ROOM-ID-", {"room_id": new_room_id})
+        message_bytes = message_to_bytes("-SET-ROOM-ID-", {"room_id": new_room_id})
         self.encrypt_and_send(message_bytes)
 
     def get_room_details(self, room_id):
@@ -144,7 +144,7 @@ class ChatClient:
         """
         asks the server for a list of all the currently open chat rooms and returns the result
         """
-        message_bytes = message_to_bytes("-CHATROOMS-", {})
+        message_bytes = message_to_bytes("-GET-CHATROOMS-", {})
         self.encrypt_and_send(message_bytes)
         print("[client get] waiting for chatrooms...")
         incoming_message = self.__socket.recv(1024) # its just waiting here...

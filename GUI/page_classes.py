@@ -197,10 +197,8 @@ class Messaging(Page):
         print("room details:", room_details)
         room_name = room_details["name"]
         window["-ROOM-NAME-"].update(room_name)
-        num_members = len(room_details["members"])
-        window["-MEMBERS-"].update("Members: " + str(num_members))
 
-        layouts.update_screen({"message_type": "-WELCOME-", "room_name": room_name})
+        layouts.update_screen({"message_type": "-WELCOME-", "room_name": room_name, "members": room_details["members"]}, window)
 
         Thread(target=client_object.receive, daemon=True).start()
 
@@ -223,14 +221,14 @@ class Messaging(Page):
                     }
                     client_object.send_text(message_dict)
                     print("[pc] message_dict:", message_dict) # tick!
-                    layouts.update_screen(message_dict)
+                    layouts.update_screen(message_dict, window)
                 else:
                     print("cannot send an empty string")
 
             elif event[0] == "-RECEIVED-":
                 message_type = event[1]
                 message_dict = values[event]
-                layouts.update_screen(message_dict)
+                layouts.update_screen(message_dict, window)
 
                 print("[pc] messaging received type:", message_type)
 
