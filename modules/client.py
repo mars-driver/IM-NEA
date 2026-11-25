@@ -54,23 +54,16 @@ class ChatClient:
         while True:
             try:
                 incoming_message = self.__socket.recv(1024)
-                print("[client receive] msg", incoming_message)
                 if self.__encryption_cipher is not None:
                     message_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
                 else:
                     message_bytes = incoming_message
                 message_dict = cbor2.loads(message_bytes)
                 message_type = message_dict["message_type"]
-
-                print("[client receive] message type:", message_type)
-
-                print("[client receive] writing event -RECEIVED-")
                 self.__window.write_event_value(("-RECEIVED-", message_type), message_dict)
-                print("[client receive] event written")
 
             except TimeoutError: # constantly checks that user is still in room
                 if not self.get_in_room():
-                    print("[client receive TC] breaking receive loop now")
                     return None # ends the thread if the user has left
 
 
@@ -104,19 +97,6 @@ class ChatClient:
         encrypted_message = encryption.encrypt_message(message_bytes, self.__encryption_cipher)
         self.__socket.send(encrypted_message)
 
-    def get_current_room_id(self):
-        """
-        asks the server for the current room id and returns the response
-        """
-        message_bytes = message_to_bytes("-GET-ROOM-ID-", {})
-        self.encrypt_and_send(message_bytes)
-        incoming_message = self.__socket.recv(1024)
-        room_id_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
-        room_id_dict = cbor2.loads(room_id_bytes)
-        assert room_id_dict["message_type"] == "-ROOM-ID-"
-        room_id = room_id_dict["room_id"]
-        return room_id
-
     def set_current_room_id(self, new_room_id):
         """
         sends the server the room id of the new room just joined
@@ -125,11 +105,11 @@ class ChatClient:
         message_bytes = message_to_bytes("-SET-ROOM-ID-", {"room_id": new_room_id})
         self.encrypt_and_send(message_bytes)
 
-    def get_room_details(self, room_id):
+    def get_room_details(self):
         """
-        asks the server for the details for the room with the given id, returns the response
+        asks the server for the details for the current room, returns the response
         """
-        message_bytes = message_to_bytes("-ROOM-DETAILS-", {"room_id": room_id})
+        message_bytes = message_to_bytes("-GET-ROOM-DETAILS-", {})
         self.encrypt_and_send(message_bytes)
         incoming_message = self.__socket.recv(1024)
         room_details_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
@@ -138,7 +118,6 @@ class ChatClient:
         room_details = room_details_dict["room_dict"]
         return room_details
 
-
     def get_chatrooms(self):
         self.__socket.settimeout(None)
         """
@@ -146,15 +125,11 @@ class ChatClient:
         """
         message_bytes = message_to_bytes("-GET-CHATROOMS-", {})
         self.encrypt_and_send(message_bytes)
-        print("[client get] waiting for chatrooms...")
-        incoming_message = self.__socket.recv(1024) # its just waiting here...
-        print("[client get] recieved message.. ready to decrypt")
+        incoming_message = self.__socket.recv(1024)
         chatrooms_bytes = encryption.decrypt_message(incoming_message, self.__encryption_cipher)
         chatrooms_dict = cbor2.loads(chatrooms_bytes)
-        print(chatrooms_dict["message_type"])
         assert chatrooms_dict["message_type"] == "-CHATROOMS-"
         chatrooms = chatrooms_dict["chatrooms"]
-        print("[client get] chatrooms list aqcuired.. returning now")
         return chatrooms
 
     def leave_room(self):

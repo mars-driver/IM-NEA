@@ -203,9 +203,8 @@ def update_chatroom_column(window, chatroom_list):
         for i in range(len(chatroom_list)):
             try:
                 key = chatroom_list[i]['id']
-                frame = window[key]
+                _ = window[key] # not in use, just testing if the key exists
             except KeyError:
-                print("adding new room with id", chatroom_list[i]['id'])
                 new_frame = [sg.Frame("", [
                 [sg.VPush()],
                 [sg.Button(
@@ -265,6 +264,7 @@ def update_screen(message_dict, window):
         window["-MEMBERS-"].update("Members: " + str(num_members))
 
     elif message_type == "-DISCONNECT-":  # A message sent by the server when a user leaves the chat room
+        print("DISCONNECT message dict:", message_dict)
         user = message_dict["user"]
         message = f"{user} has left the chat."
         sg.cprint(message, font=(MAIN_FONT, MESSAGE_SIZE))
@@ -285,6 +285,7 @@ def update_screen(message_dict, window):
     else:
         message = "Error: unknown message"
         print("[pc]", message)
+        print("message:", message_dict)
 
 def clear_screen(window):
     window["-TEXT-OUTPUT-"].update("")

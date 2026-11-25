@@ -69,11 +69,10 @@ class Connecting(Page):
             else:
                 try:
                     client_object = client.ChatClient(self.get_server_ip(), self.get_port(), window)
-                    current_user.set_client_object(client_object)
                     client_object.connect()
                     current_user.set_client_object(client_object)
                     return self.change_page("-SIGNUP-PAGE-"), current_user
-                except:
+                except ConnectionRefusedError:
                     pass
 
 class SignUp(Page):
@@ -85,7 +84,6 @@ class SignUp(Page):
         window_closed = self.get_window_closed()
         while True:
             event, values = window.read()
-            print("[pc sign up] event:", event)
             if event == window_closed:
                 break
             elif event == "-SIGN-UP-":
@@ -157,27 +155,17 @@ class Home(Page):
         window_closed = self.get_window_closed()
         client_object = current_user.get_client_object()
 
-        print("[pc] requesting chat rooms")
         current_chatroom_list = client_object.get_chatrooms()
-        print("[pc] chat rooms:", current_chatroom_list)
-
         layouts.update_chatroom_column(window, current_chatroom_list)
 
         while True:
             event, values = window.read()
-            print("[pc] home event:", event)
             if event == window_closed:
                 break
-            if event[0] == "-RECEIVED-":
-                print("[pc] received")
-                print("[pc] values:", values)
-                #client_object.receive_chatroom()
             elif event.split("-")[1] == "ROOM":
                 room_index = int(event.split("-")[2])
                 selected_room = current_chatroom_list[room_index]
-                print("[pc] room selected:", selected_room)
                 current_user.set_current_room_id(selected_room["id"])
-                print("[pc] set current room id to", selected_room["id"])
                 return self.change_page("-MESSAGING-PAGE-"), current_user
 
 
@@ -189,12 +177,10 @@ class Messaging(Page):
         window = self.get_window()
         window_closed = self.get_window_closed()
         client_object = current_user.get_client_object()
-        layouts.clear_screen(window)
+        layouts.clear_screen(window) # clears the screen of any old messages
 
         # displays the room info on the window
-        room_id = client_object.get_current_room_id()
-        room_details = client_object.get_room_details(room_id)
-        print("room details:", room_details)
+        room_details = client_object.get_room_details()
         room_name = room_details["name"]
         window["-ROOM-NAME-"].update(room_name)
 
@@ -204,7 +190,6 @@ class Messaging(Page):
 
         while True:
             event, values = window.read()
-            print("[pc] messaging event:", event)
             if event == window_closed:
                 break
 
@@ -220,17 +205,13 @@ class Messaging(Page):
                         "content": message,
                     }
                     client_object.send_text(message_dict)
-                    print("[pc] message_dict:", message_dict) # tick!
                     layouts.update_screen(message_dict, window)
                 else:
                     print("cannot send an empty string")
 
             elif event[0] == "-RECEIVED-":
-                message_type = event[1]
                 message_dict = values[event]
                 layouts.update_screen(message_dict, window)
-
-                print("[pc] messaging received type:", message_type)
 
 
 def show_password(event, window):
